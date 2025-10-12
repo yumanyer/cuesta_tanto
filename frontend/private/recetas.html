@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">  <meta name="description" content="Gestiona tus recetas y calcula costos de producción">
+  <link rel="stylesheet" href="/css/style.css">
+  <title>Mis Recetas - ¿Cuanto Cuesta?</title>
+</head>
+<body class="app-body">
+    
+  <div class="recetas-app-container">
+    
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="app-sidebar" id="sidebar" role="complementary" aria-label="Menú lateral">
+      <div class="sidebar-toggle">
+        <button id="toggleBtn" aria-label="Mostrar u ocultar menú lateral">☰</button>
+      </div>
+      <div class="sidebar-brand">
+        <div class="brand-logo">¿Cuanto Cuesta?</div>
+        <div class="brand-subtitle">Calculadora Enorme</div>
+      </div>
+      <nav class="sidebar-nav" role="navigation " aria-label="Navegación principal">
+        <a href="matterRaw" class="nav-item " onclick="showSection('materials')">
+          <span class="nav-icon">📦</span>
+          <span class="nav-label">Materia Prima</span>
+        </a>
+        <a href="ingredientes" class="nav-item " onclick="showSection('ingredientes')">
+          <span class="nav-icon">🧁</span>
+          <span class="nav-label">Ingredientes</span>
+        </a>
+        <a href="recetas" class="nav-item active" onclick="showSection('recipes')">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">Recetas</span>
+        </a>
+      </nav>
+<div class="user-dropdown" id="userDropdown">
+  <img src="img/usuario.png" alt="Avatar" class="user-avatar" />
+  <div class="user-info">
+    <span class="user-name"></span>
+    <span class="user-email"></span>
+  </div>
+</div>
+<dialog class="dialog">
+    <form method="dialog" class="logout-form">
+      <h2 class="dialog-title">¿Seguro que quieres cerrar sesión?</h2>
+        <button type="submit" class="btn-cancel btn-dialog" value="yes">Cerrar sesión</button>
+        <button type="submit"class="btn-confirm btn-dialog" value="no">Cancelar</button>
+    </form>
+</dialog>
+    </aside> 
+    <!-- ========== CONTENIDO PRINCIPAL ========== -->
+    <main class="recetas-content" role="main">
+      
+      <section id="recetas-view" class="view active" aria-labelledby="recetas-heading">
+        
+        <header class="view-header">
+          <h2 id="recetas-heading" class="view-title">Mis Recetas</h2>
+          <button id="btnAddRecipe" class="btn btn-primary" aria-label="Agregar nueva receta">
+            <span aria-hidden="true">➕</span> Agregar Receta
+          </button>
+        </header>
+
+        <div class="recipes-grid" id="recipes-grid" role="list" aria-live="polite" aria-label="Lista de recetas">
+          
+          <!-- Contenedor donde se renderizan las recetas -->
+          <div id="recetasContainer"></div>
+
+        </div>
+        
+      </section>
+      
+    </main>
+
+  </div>
+
+  <!-- ========== TEMPLATES ========== -->
+  
+  <!-- Template de Tarjeta de Receta -->
+  <template id="recipeCardTemplate">
+    <article class="recipe-card" role="listitem"  data-id="">
+      <header class="card-header">
+        <div>
+          <h3 class="card-title"></h3>
+          <p class="card-description"></p>
+        </div>
+      </header>
+      
+      <div class="recipe-cost-info">
+        <dl class="cost-item">
+          <dt class="cost-label">Costo Total:</dt>
+          <dd class="cost-value total-cost"></dd>
+        </dl>
+        <dl class="cost-item">
+          <dt class="cost-label">Porciones:</dt>
+          <dd class="cost-value portions-value"></dd>
+        </dl>
+        <dl class="cost-item">
+          <dt class="cost-label">Costo por Porción:</dt>
+          <dd class="cost-value unit-cost"></dd>
+        </dl>
+      </div>
+      
+      <footer class="card-actions">
+        <button class="card-btn btn-view" type="button" aria-label="Ver detalles de la receta">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          Ver
+        </button>
+        <button class="card-btn btn-edit" type="button" aria-label="Editar receta">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Editar
+        </button>
+        <button class="card-btn btn-delete danger" type="button" aria-label="Eliminar receta">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+          Eliminar
+        </button>
+      </footer>
+    </article>
+  </template>
+
+  <!-- Template de Toast (Notificaciones) -->
+<template id="toastTemplate">
+  <figure class="toast hide">
+    <div class="toast__body">
+      <div class="toast__message"></div>
+      <svg class="toast__close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M18 6l-12 12"></path>
+        <path d="M6 6l12 12"></path>
+      </svg>
+    </div>
+  </figure>
+</template>
+
+<!-- Template para eliminar receta -->
+  <template id="deleteModalTemplate">
+    <div class="modal-overlay active">
+      <div class="modal modal-danger">
+        <div class="modal-header">
+          <h3>Confirmar Eliminación</h3>
+          <button class="modal-close">×</button>
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro que deseas eliminar esta receta?</p>
+          <div class="highlight-box"><strong>Receta:</strong> <span class="material-name"></span></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary modal-cancel">Cancelar</button>
+          <button class="btn btn-danger modal-confirm">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+<!-- Template para crear y modificar receta -->
+  <template id="createModalTemplate">
+    <div class="modal-overlay active">
+      <div class="modal modal-danger">
+        <div class="modal-header">
+          <h3 class="modal-title-receta">Crear Receta</h3>
+          <button class="modal-close">×</button>
+        </div>
+        <div class="modal-body">
+          <form class="modal-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Nombre</label>
+                <input  name="nombre_receta" type="text" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Descripción</label>
+                <input  name="descripcion" type="text" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Porciones </label>
+                <input  name="porciones" type="number" min="0" class="form-input" required>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary modal-cancel">Cancelar</button>
+          <button class="btn btn-primary modal-save">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+
+  <template id="viewIngredientsModalTemplate">
+  <div class="modal-overlay active">
+    <div class="modal modal-view-ingredients">
+      <div class="modal-header">
+        <h3 class="modal-title">Receta</h3>
+        <button class="modal-close">×</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Nombre:</strong> <span class="view-nombre"></span></p>
+        <p><strong>Descripción:</strong> <span class="view-descripcion"></span></p>
+        <p><strong>Porciones:</strong> <span class="view-porciones"></span></p>
+
+        <div class="ingredients-list">
+          <h4>Ingredientes</h4>
+          <ul class="ingredients-items"></ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn modal-close-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+  <script type="module" src="/scripts/recetas.script.js"></script>
+      <script src="/scripts/mobile-menu.js"></script>
+
+          <script type="module" src="/scripts/analytics.js"></script>
+
+</body>
+</html>

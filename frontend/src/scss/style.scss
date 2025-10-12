@@ -1,0 +1,39 @@
+
+/*BASES GENERALES*/
+@use "base/reset";
+/*FIN DE BASES GENERALES*/
+
+/*ESTILOS DE NAVBAR*/
+@use "layout/navbar";
+/*FIN DE LOS ESTILOS DE NAVBAR*/
+
+
+/*PORTAL DE ACCESO*/
+@use "layout/home";
+/*FIN DE PORTAL DE ACCESO*/
+
+/*PORTAL DE LOGIN*/
+@use "layout/login";
+/*FIN DE PORTAL DE LOGIN*/
+
+/*SIGN-UP*/
+@use "layout/sign-up";
+/*FIN DE SIGN-UP*/
+/*LOADER*/
+@use "layout/loader";
+/*FIN DE LOADER*/
+
+/*PORTAL DE GESTIÓN DE PRODUCTOS*/
+@use "layout/matterRaw";
+/*FIN DE PORTAL DE GESTIÓN DE PRODUCTOS*/
+
+/*PORTAL DE GESTION DE INGREDIENTES*/
+@use "layout/ingredientes";
+
+
+/*PORTAL DE GESITON DE RECETAS*/
+@use "layout/recetas";
+/*FIN DE PORTAL DE GESITON DE RECETAS*/
+/*MODAL TAMBIEN TIENE EL ESTILO DE TOAS*/   
+@use "layout/modal";
+/*FIN DE MODAL*/

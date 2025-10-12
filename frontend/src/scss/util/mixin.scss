@@ -1,0 +1,152 @@
+// ===============================
+// 🎨 Colores
+// ===============================
+$color-bg: #0f0f0f; // Fondo principal
+$color-card-bg: #1b1b1b; // Fondo cards
+$color-dark: #111;
+$color-dark-alt: #171717;
+$color-door-bg: #1a1a1a; // Matter Raw primary-bg
+$color-secondary-bg: #2c3e50; // Matter Raw secondary-bg
+$color-bt-bg: #252525;
+$color-placeholder: #aaa;
+$color-text-primary: #f5f5f5;
+$color-text-secondary: #bbbbbb;
+$color-text-primary-mr: #e0e0e0; // Matter Raw text-primary
+$color-text-secondary-mr: #bdbdbd; // Matter Raw text-secondary
+$color-accent: #007bff;
+$color-accent-dark: #0056b3; // Para hover
+$color-accent-light: #4dabf7;
+$color-danger: #dc3545;
+$color-success: #28a745;
+$color-warning: #ffc107;
+
+// ===============================
+// 🖌 Degradados
+// ===============================
+$gradient-accent-navbar: linear-gradient(135deg, #d4af37, #cfa35f);
+$gradient-button-primary: linear-gradient(45deg, $color-accent, $color-accent-dark);
+$gradient-accent: linear-gradient(135deg, $color-accent, $color-accent-dark);
+$gradient-card: linear-gradient(145deg, $color-card-bg, $color-bt-bg);
+$gradient-button: linear-gradient(45deg, $color-accent, $color-accent-light);
+
+// ===============================
+// 🆎 Tipografía Local
+// ===============================
+
+// Open Sans local
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/Open_Sans/OpenSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/Open_Sans/OpenSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/Open_Sans/OpenSans-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+// Mixins para tipografía
+@mixin font-open-sans($weight: 400, $style: normal) {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: $weight;
+  font-style: $style;
+}
+
+// ===============================
+// 🌌 Sombras
+// ===============================
+$shadow-inset-dark: inset 0 0 40px rgba(0, 0, 0, 0.8);
+$shadow-blue: 0 8px 20px rgba(0, 123, 255, 0.4);
+$shadow-soft: 0 5px 20px rgba(0, 0, 0, 0.2);
+$shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.3);
+$shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+$shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.4);
+$shadow-strong: 0 12px 48px rgba(0, 0, 0, 0.5);
+$shadow-accent: 0 8px 32px rgba(0, 123, 255, 0.3);
+// ===============================
+// 🪟 Glassmorphism
+// ===============================
+$glass-bg: rgba(255, 255, 255, 0.08);
+$glass-border: rgba(255, 255, 255, 0.15);
+
+// ===============================
+// 🔲 Bordes
+// ===============================
+$radius-card: 15px;
+$radius-input: 10px;
+$radius-button: 10px;
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 20px;
+
+// ===============================
+// ⏳ Tiempos
+// ===============================
+$transition-fast: 0.4s ease-in-out;
+$transition-doors: 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+$transiton-loader:opacity 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.5s, z-index 0s linear 0.5s;
+$transition-fast: 0.2s ease-out;
+$transition-medium: 0.3s ease-out;
+$transition-slow: 0.5s ease-out;
+
+// ===============================
+// ⏳ Espacios
+// ===============================
+$spacing-xs: 0.5rem;
+$spacing-sm: 1rem;
+$spacing-md: 1.5rem;
+$spacing-lg: 2rem;
+$spacing-xl: 3rem;
+
+
+// ===============================
+// Mixins
+// ===============================
+@mixin card-style {
+  background: $glass-bg;
+  backdrop-filter: blur(10px);
+  border-radius: $radius-card;
+  border: 1px solid $glass-border;
+  padding: 30px;
+  margin-bottom: 30px;
+  transition: all $transition-fast cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: $shadow-soft;
+  position: relative;
+  overflow: hidden;
+}
+
+@mixin button-primary {
+  background: $gradient-button-primary;
+  color: white;
+  border: none;
+  border-radius: $radius-button;
+  padding: 12px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: $shadow-hover;
+  }
+}
+@mixin card-base {
+  background: $gradient-card;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-soft;
+}

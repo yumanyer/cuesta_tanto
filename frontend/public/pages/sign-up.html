@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up Door Animation</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="box">
+
+  <div class="container">
+    <!-- Las puertas -->
+    <div class="door door-left"></div>
+    <div class="door door-right"></div>
+
+    <!-- Contenedor que se superpone para el formulario y el contenido detrás -->
+    <div class="overlay-container">
+
+      <!-- Contenido que se muestra al abrir las puertas -->
+      <div class="content-behind" id="contentBehind">
+        <div id="loader" class="loader" style="display:none;">
+          <div class="pyramid-loader">
+            <div class="wrapper">
+              <span class="side side1"></span>
+              <span class="side side2"></span>
+              <span class="side side3"></span>
+              <span class="side side4"></span>
+              <span class="shadow"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario de registro -->
+      <form class="form" id="signUpForm">
+        <p id="heading">Crear Cuenta</p>
+
+        <!-- Campo de usuario -->
+        <div class="field">
+          <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <input autocomplete="off" placeholder="Nombre de usuario" class="input-field" id="username" type="text">
+        </div>
+
+        <!-- Campo de email -->
+        <div class="field">
+          <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+          <input autocomplete="off" placeholder="Correo electrónico" class="input-field" id="email" type="email">
+        </div>
+
+        <!-- Campo de contraseña -->
+        <div class="field">
+          <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6-3c0-1.66 1.34-3 3-3s3 1.34 3 3v2h-6V6z"/>
+          </svg>
+          <input placeholder="Contraseña" class="input-field" id="password" type="password">
+        </div>
+
+        <!-- Campo de confirmar contraseña -->
+        <div class="field">
+          <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <input placeholder="Confirmar contraseña" class="input-field" id="confirmPassword" type="password">
+        </div>
+
+        <!-- Indicador de fortaleza de contraseña -->
+        <div class="password-strength" id="passwordStrength">
+          <div class="strength-bar">
+            <div class="strength-fill" id="strengthFill"></div>
+          </div>
+          <span class="strength-text" id="strengthText">Ingresa una contraseña</span>
+        </div>
+
+        <!-- Mensaje de error/éxito -->
+        <div class="message-area">
+          <p id="errorMessage" class="error-message"></p>
+          <p id="successMessage" class="success-message"></p>
+        </div>
+
+        <!-- Términos y condiciones -->
+        <div class="checkbox-field">
+          <input type="checkbox" id="termsCheckbox" class="checkbox">
+          <label for="termsCheckbox" class="checkbox-label">
+            Acepto los <a href="#" class="terms-link">términos y condiciones</a>
+          </label>
+        </div>
+
+        <div class="btn-group">
+          <button class="button button1" type="submit">Crear Cuenta</button>
+          <button class="button button2" type="button" onclick="window.location.href='login.html'">Ya tengo cuenta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+        <audio id="audio">
+          <source type=" audio/wav" src="../audio/sign-up.wav">
+        </audio>
+  <script type="module" src="../scripts/sign-up.script.js" defer></script>  
+      <script type="module" src="/scripts/analytics.js"></script>
+
+</body>
+</html>

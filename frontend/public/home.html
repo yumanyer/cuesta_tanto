@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuanto Cuesta - Portal de Acceso</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="box-portal">
+  <header class="header-portal">
+    <h1>CUANTO CUESTA</h1>
+  </header>
+
+  <main class="main-portal">
+    <!-- Card 1 - Carrusel -->
+    <div class="card-portal carousel-placeholder animation-delay-0.2">
+      <div class="container-carousel">
+        <div class="carousel">
+          <div class="carousel-item"><img class="carousel-img" src="https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?w=500" alt="Autumn"></div>
+          <div class="carousel-item"><img class="carousel-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500" alt="Mountains"></div>
+          <div class="carousel-item"><img class="carousel-img" src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=500" alt="Desert"></div>
+          <div class="carousel-item"><img class="carousel-img" src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=500" alt="Landscape"></div>
+          <div class="carousel-item"><img class="carousel-img" src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=500" alt="Japan"></div>
+          <div class="carousel-item"><img class="carousel-img" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500" alt="Beach"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card-portal text-block animation-delay-0.4">
+      <p>¿Cuánto cuesta? es una aplicación web diseñada para ayudarte a calcular y gestionar el costo real de tus productos o recetas de forma rápida, precisa y visual.</p>
+      <p><strong>
+El sistema permite registrar materias primas, asignarles precios y unidades de medida, y luego combinarlas en recetas o productos finales, mostrando automáticamente el costo total de producción.
+
+La plataforma está pensada para emprendedores, cocineros, productores y pequeños negocios que necesitan tener un control detallado de sus costos sin complicaciones.
+Además, incorpora reglas inteligentes: si una materia prima está siendo usada en una receta, solo pueden modificarse ciertos campos para evitar errores en los cálculos existentes.
+
+En resumen, ¿Cuánto cuesta? convierte el control de costos en un proceso simple, visual y confiable.</strong></p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card-portal text-block animation-delay-0.6">
+      <p><strong>Texto explicando por qué se hizo esto sabiendo que existe la IA.</strong></p>
+      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
+    </div>
+
+    <!-- Card 4 - Demo -->
+    <section class="demo-section card-portal animation-delay-0.6">
+      <h2>DEMO</h2>
+      <div class="demo-video-placeholder">
+        <video style=" width: 90%;" class="demo-video" src="audio/Desglosando__Cuanto_Cuesta_.mp4" controls ></video>
+      </div>
+      <div class="action-buttons-portal">
+        <button class="btn-portal" onclick="window.location.href='pages/sign-up.html'">Registrarse</button>
+        <button class="btn-portal" onclick="window.location.href='pages/login.html'">Loguearse</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const carousel = document.querySelector(".carousel");
+    const carouselItems = carousel.querySelectorAll(".carousel-item");
+    const containerCarousel = document.querySelector(".container-carousel");
+
+    let isMouseDown = false;
+    let currentMousePos = 0;
+    let lastMousePos = 0;
+    let lastMoveTo = 0;
+    let moveTo = 0;
+    let autoRotateSpeed = 0.3;
+
+    const createCarousel = () => {
+      const length = carouselItems.length;
+      const degrees = 360 / length;
+      const gap = 20;
+      
+      // Calcular distancia Z basada en el ancho del item, no del contenedor
+      const itemWidth = window.innerWidth <= 320 ? 100 : 
+                       window.innerWidth <= 375 ? 120 :
+                       window.innerWidth <= 576 ? 140 :
+                       window.innerWidth <= 768 ? 160 :
+                       window.innerWidth <= 992 ? 180 : 200;
+      
+      const tz = itemWidth / 2 / Math.tan(Math.PI / length) + gap;
+
+      carouselItems.forEach((item, i) => {
+        const degreesByItem = degrees * i + "deg";
+        item.style.setProperty("--rotatey", degreesByItem);
+        item.style.setProperty("--tz", tz + "px");
+      });
+    };
+
+    const lerp = (a, b, n) => n * (a - b) + b;
+
+    const getPosX = (x) => {
+      currentMousePos = x;
+      moveTo = currentMousePos < lastMousePos ? moveTo - 2 : moveTo + 2;
+      lastMousePos = currentMousePos;
+    };
+
+    const update = () => {
+      moveTo += autoRotateSpeed;
+      lastMoveTo = lerp(moveTo, lastMoveTo, 0.1);
+      carousel.style.setProperty("--rotatey", lastMoveTo + "deg");
+      requestAnimationFrame(update);
+    };
+
+    const initEvents = () => {
+      const handleDown = () => { 
+        isMouseDown = true; 
+        carousel.style.cursor = "grabbing"; 
+      };
+      
+      const handleUp = () => { 
+        isMouseDown = false; 
+        carousel.style.cursor = "grab"; 
+      };
+      
+      const handleMove = (e) => {
+        if (isMouseDown) getPosX(e.clientX);
+      };
+
+      carousel.addEventListener("mousedown", handleDown);
+      carousel.addEventListener("mouseup", handleUp);
+      carousel.addEventListener("mouseleave", handleUp);
+      carousel.addEventListener("mousemove", handleMove);
+
+      carousel.addEventListener("touchstart", () => isMouseDown = true);
+      carousel.addEventListener("touchend", () => isMouseDown = false);
+      carousel.addEventListener("touchmove", (e) => {
+        if (isMouseDown) getPosX(e.touches[0].clientX);
+      });
+
+      window.addEventListener("resize", createCarousel);
+
+      createCarousel();
+      update();
+    };
+
+    initEvents();
+  </script>
+      <script type="module" src="/scripts/analytics.js"></script>
+
+</body>
+</html>

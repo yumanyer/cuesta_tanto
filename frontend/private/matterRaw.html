@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Matter Raw Professional</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body" >
+    <div class="app-container">
+
+        <!-- Sidebar -->
+    <aside class="app-sidebar" id="sidebar" role="complementary" aria-label="Menú lateral">
+      <div class="sidebar-toggle">
+        <button id="toggleBtn" aria-label="Mostrar u ocultar menú lateral">☰</button>
+      </div>
+      <div class="sidebar-brand">
+        <div class="brand-logo">¿Cuanto Cuesta?</div>
+        <div class="brand-subtitle">Calculadora Enorme</div>
+      </div>
+      <nav class="sidebar-nav" role="navigation " aria-label="Navegación principal">
+        <a href="matterRaw" class="nav-item active" onclick="showSection('materials')">
+          <span class="nav-icon">📦</span>
+          <span class="nav-label">Materia Prima</span>
+        </a>
+        <a href="ingredientes" class="nav-item " onclick="showSection('ingredientes')">
+          <span class="nav-icon">🧁</span>
+          <span class="nav-label">Ingredientes</span>
+        </a>
+        <a href="recetas" class="nav-item" onclick="showSection('recipes')">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">Recetas</span>
+        </a>
+      </nav>
+<div class="user-dropdown" id="userDropdown">
+  <img src="img/usuario.png" alt="Avatar" class="user-avatar" />
+  <div class="user-info">
+    <span class="user-name"></span>
+    <span class="user-email"></span>
+  </div>
+</div>
+<dialog class="dialog">
+    <form method="dialog" class="logout-form">
+      <h2 class="dialog-title">¿Seguro que quieres cerrar sesión?</h2>
+        <button type="submit" class="btn-cancel btn-dialog" value="yes">Cerrar sesión</button>
+        <button type="submit"class="btn-confirm btn-dialog" value="no">Cancelar</button>
+    </form>
+</dialog>
+    </aside> 
+
+        <!-- Main content -->
+        <main class="app-main">
+            <section class="content-section active" id="materials">
+                <div class="section-header">
+                    <!-- <h2 class="section-title">Gestión de Materia Prima</h2> -->
+                </div>
+
+                <div class="content-grid">
+                    <!-- Add Material Form -->
+                    <div class="card">
+                        <div class="card-header"><h3 class="card-title">Agregar Material</h3></div>
+                        <form id="addMaterialForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="materialName">Nombre</label>
+                                    <input type="text" id="materialName" class="form-input" placeholder="Nombre" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="materialQuantity">Cantidad</label>
+                                    <input type="number" id="materialQuantity" class="form-input" placeholder="0" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="materialUnit">Unidad</label>
+                                    <select id="materialUnit" class="form-select" required>
+                                        <option value="">Seleccionar</option>
+                                        <option value="Individual">Unitario</option>
+                                        <option value="Gramos">Gramos</option>
+                                        <option value="Mililitro">Mililitro</option>
+                                        <option value="Kilo">Kilo</option>
+                                        <option value="Litro">Litro</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="materialPrice">Precio</label>
+                                    <input type="number" step="0.01" id="materialPrice" class="form-input" min="0" placeholder="0.00" required>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn btn-primary">Agregar Material</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Materials List -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Inventario Actual</h3>
+                        </div>
+                        <div id="materialsTableContainer">
+                            
+                            <table id="productosTable" class="matterRaw-table">
+                              <thead class="matterRaw-thead">
+                                <tr>
+                                  <th class="matterRaw-th-nombre">Nombre</th>
+                                  <th class="matterRaw-th-cantidad">Cantidad</th>
+                                  <th class="matterRaw-th-unidad">Unidad</th>
+                                  <th class="matterRaw-th-precio">Precio</th>
+                                  <th class="matterRaw-th-precioUnitario">Precio Unitario</th>
+                                  <th class="matterRaw-th-acciones">Acciones</th>
+                                </tr>
+                              </thead>
+                              <tbody class="matterRaw-tbody"></tbody>
+                            </table>
+
+
+                            <div id="emptyMaterials" class="empty-state" style="display:none;">
+                                📦 No hay materiales registrados. Agrega tu primera materia prima usando el formulario de arriba.
+                            </div>
+                        </div>
+                        <div id="pagination" class="pagination"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Templates -->
+    <template id="productRowTemplate">
+        <tr>
+            <td class="td-nombre"></td>
+            <td class="td-cantidad"></td>
+            <td class="td-unidad"></td>
+            <td class="td-precio"></td>
+            <td class="td-precio_unitario"></td>
+            <td class="td-action">
+                <span class="lacaca delete">🗑️</span>
+                <span class="lacaca edit">✏️</span>
+            </td>
+        </tr>
+    </template>
+
+    <template id="editModalTemplate">
+        <div class="modal-overlay active">
+            <div class="modal">
+                <div class="modal-header">
+                    <div class="modal-title-container"><h3 class="modal-title">Editar Materia Prima</h3></div>
+                    <button class="modal-close">×</button>
+                </div>
+                <div class="modal-body">
+                    <form class="modal-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Nombre</label>
+                                <input type="text" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Cantidad</label>
+                                <input type="number" min="0" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Unidad</label>
+                                <select class="form-select">
+                                    <option class="option" value="Gramos">Gramos</option>
+                                    <option class="option" value="Individual">Unitario</option>
+                                    <option class="option" value="Mililitro">Mililitro</option>
+                                    <option class="option" value="Kilo">Kilo</option>
+                                    <option class="option" value="Litro">Litro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Precio</label>
+                                <input type="number" step="0.01" min="0" class="form-input">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary modal-cancel">Cancelar</button>
+                    <button class="btn btn-primary modal-save">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="deleteModalTemplate">
+        <div class="modal-overlay active">
+            <div class="modal modal-danger">
+                <div class="modal-header">
+                    <h3 class="modal-title">Confirmar Eliminación</h3>
+                    <button class="modal-close">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro que deseas eliminar este material?</p>
+                    <div class="highlight-box"><strong>Material:</strong> <span class="material-name"></span></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary modal-cancel">Cancelar</button>
+                    <button class="btn btn-danger modal-confirm">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </template>
+    <!-- TOAST  -->
+<template id="toastTemplate">
+  <figure class="toast hide">
+    <div class="toast__body">
+      <div class="toast__message"></div>
+      <svg class="toast__close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M18 6l-12 12"></path>
+                    <path d="M6 6l12 12"></path>
+      </svg>
+    </div>
+  </figure>
+</template>
+
+    <script src="/scripts/mobile-menu.js"></script>
+    <script type="module" src="/scripts/matterRaw.script.js" defer></script>
+
+        <script type="module" src="/scripts/analytics.js"></script>
+
+</body>
+</html>

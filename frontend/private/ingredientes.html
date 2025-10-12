@@ -1,0 +1,270 @@
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-status-bar-style" content="black-translucent">
+     <title>Gestión de Ingredientes</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css">
+    </head>
+    <body class="app-body">
+
+    <div class="app-container">
+      <aside class="app-sidebar" id="sidebar" role="complementary" aria-label="Menú lateral">
+        <div class="sidebar-toggle">
+          <button id="toggleBtn" aria-label="Mostrar u ocultar menú lateral">☰</button>
+        </div>
+        <div class="sidebar-brand">
+          <div class="brand-logo">¿Cuanto Cuesta?</div>
+          <div class="brand-subtitle">Calculadora Enorme</div>
+        </div>
+        <nav class="sidebar-nav" role="navigation" aria-label="Navegación principal">
+          <a href="matterRaw" class="nav-item" onclick="showSection('materials')">
+            <span class="nav-icon">📦</span>
+            <span class="nav-label">Materia Prima</span>
+          </a>
+          <a href="ingredientes" class="nav-item active" onclick="showSection('ingredientes')">
+            <span class="nav-icon">🧁</span>
+            <span class="nav-label">Ingredientes</span>
+          </a>
+          <a href="recetas" class="nav-item" onclick="showSection('recipes')">
+            <span class="nav-icon">📋</span>
+            <span class="nav-label">Recetas</span>
+          </a>
+        </nav>
+    <div class="user-dropdown" id="userDropdown">
+      <img src="img/usuario.png" alt="Avatar" class="user-avatar" />
+      <div class="user-info">
+        <span class="user-name"></span>
+        <span class="user-email"></span>
+      </div>
+    </div>
+
+    <dialog class="dialog">
+        <form method="dialog" class="logout-form">
+          <h2 class="dialog-title">¿Seguro que quieres cerrar sesión?</h2>
+            <button type="submit" class="btn-cancel btn-dialog" value="yes">Cerrar sesión</button>
+            <button type="submit"class="btn-confirm btn-dialog" value="no">Cancelar</button>
+        </form>
+    </dialog>
+    
+      </aside>
+
+      <!-- Main content con nuevo diseño -->
+      <main class="app-main">
+        <!-- Header con título y subtítulo -->
+        <div class="new-header">
+          <div class="header-content">
+            <h1 class="new-title">Gestión de Ingredientes</h1>
+          </div>
+        </div>
+
+
+        <!-- Selector de Receta Principal -->
+        <div class="recipe-selector-card">
+          <div class="recipe-selector-header">
+            <div class="recipe-selector-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                <path d="M8.1,13.34L10.84,10.6C11.22,10.22 11.22,9.64 10.84,9.26C10.46,8.88 9.88,8.88 9.5,9.26L6.14,12.62C5.76,13 5.76,13.58 6.14,13.96L9.5,17.32C9.88,17.7 10.46,17.7 10.84,17.32C11.22,16.94 11.22,16.36 10.84,15.98L8.1,13.34Z"/>
+              </svg>
+              <span>Seleccionar Receta</span>
+            </div>
+          </div>
+          <div class="recipe-selector-content">
+            <label class="recipe-label">Receta Activa:</label>
+            <select class="recipe-select select2" id="recipeSelect">
+              <option value="">Seleccionar receta...</option>
+            </select>
+          </div>
+        </div>
+
+
+
+        <!-- Contenido principal en grid -->
+        <div class="main-grid">
+          <!-- Panel Individual -->
+          <div class="mode-panel active" data-panel="individual">
+            <!-- Columna Izquierda - Formulario -->
+            <div class="form-card">
+              <div class="form-card-header">
+                <div class="form-card-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                  </svg>
+                </div>
+                <span>Agregar Ingrediente</span>
+              </div>
+
+
+
+              <form class="ingredient-form" id="individualForm">
+                <div class="form-group">
+                  <label class="form-label">Materia Prima:</label>
+                  <select class=" form-select select2 "  id="selectMateriaPrima">
+                    <option  value="">Seleccionar...</option>
+                  </select>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Cantidad:</label>
+                    <input type="number" class="form-input" id="cantidadIndividual" placeholder="0" step="0.1" min="0">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" >Unidad:</label>
+                    <select class="form-select" id="unidadIndividual">
+                      <option>Gramos</option>
+                      <option>Kilo</option>
+                      <option>Mililitro</option>
+                      <option>Litro</option>
+                      <option>Individual</option>
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class=" botones">
+                  <button type="submit" class="btn-primary-new">
+                      <span>📝</span> Agregar Ingrediente
+                  </button>
+                  <button type="button" class="btn-primary-new confirm" id="confirmBtn">
+                   <span>✓</span>Confirmar Ingredientes Agregados
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Columna Derecha - Lista -->
+            <div class="list-card">
+              <div class="list-card-header">
+                <div class="list-card-icon">
+                📋
+                </div>
+                <span>Lista de Ingredientes</span>
+              </div>
+
+              <div class="ingredients-list-container" id="ingredientsListIndividual">
+                <div class="empty-state">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6Z"/>
+                  </svg>
+                  <p>No hay ingredientes agregados</p>
+                  <small>Comienza agregando ingredientes a tu receta</small>
+                </div>
+              </div>
+
+              <div class="total-cost-card">
+                <h3>Costo Total</h3>
+                <div class="total-amount" id="totalCostIndividual"></div>
+              </div>
+            </div>
+          </div>
+
+
+<!-- Ingrediente -->
+<template id="tpl-ingrediente">
+  <div class="ingrediente-ingredient-item">
+    <div class="ingrediente-ingredient-info">
+      <span class="ingrediente-nombre"></span>
+      <span class="ingrediente-cantidad"></span>
+      <span class="ingrediente-label"></span>
+    </div>
+    <div class="ingrediente-ingredient-cost"></div>
+    <div class="ingrediente-actions">
+      <button data-action="edit" class="lacaca edit">✏️ Editar</button>
+      <button data-action="delete" class="lacaca delete">🗑️ Eliminar</button>
+      <button data-action="clear" class="lacaca delete">❌ Quitar</button>
+    </div>
+  </div>
+</template>
+
+<!-- Modal EDIT -->
+<template id="editModalTemplate">
+  <div class="modal-overlay active">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title-container">
+          <h3 class="modal-title">Editar Ingrediente</h3>
+        </div>
+        <button class="modal-close">×</button>
+      </div>
+      <div class="modal-body">
+        <form class="modal-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Nombre</label>
+              <input type="text" class="form-input input-nombre">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cantidad</label>
+              <input type="number" min="0" class="form-input input-cantidad">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Unidad</label>
+              <select class="form-select input-unidad">
+                <option value="Gramos">Gramos</option>
+                <option value="Individual">Unitario</option>
+                <option value="Mililitro">Mililitro</option>
+                <option value="Kilo">Kilo</option>
+                <option value="Litro">Litro</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary modal-cancel">Cancelar</button>
+        <button class="btn btn-primary modal-save">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Modal DELETE -->
+     <template id="deleteModalTemplate">
+        <div class="modal-overlay active">
+            <div class="modal modal-danger">
+                <div class="modal-header">
+                    <h3 class="modal-title">Confirmar Eliminación</h3>
+                    <button class="modal-close">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro que deseas eliminar este ingrediente de la receta?</p>
+                    <div class="highlight-box"><strong>Ingrediente:</strong> <span class="ing-name"></span></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary modal-cancel">Cancelar</button>
+                    <button class="btn btn-danger modal-confirm">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- TOAST  -->
+<template id="toastTemplate">
+  <figure class="toast hide">
+    <div class="toast__body">
+      <div class="toast__message"></div>
+      <svg class="toast__close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M18 6l-12 12"></path>
+                    <path d="M6 6l12 12"></path>
+      </svg>
+    </div>
+  </figure>
+</template>
+
+        </div>
+      </main>
+    </div>
+
+    <script src="/scripts/mobile-menu.js"></script>
+    <script type="module" src="/scripts/ingredientes.script.js" defer></script>
+    
+    <script type="module" src="/scripts/analytics.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </body>
+    </html>

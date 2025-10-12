@@ -1,0 +1,18 @@
+# === BACKEND ===
+backend/node_modules/     # Librerías instaladas con npm
+backend/.env              # Archivo de entorno principal
+backend/*.env*            # Cubre cualquier otro archivo tipo .env.local o .env.production
+backend/developer.env     # Tu archivo específico de entorno de desarrollo
+
+# === FRONTEND ===
+frontend/node_modules/    # Dependencias del frontend
+frontend/.env             # Variables de entorno del frontend (si existieran)
+frontend/src/*             # Código fuente SCSS o JS si ya compilás a public/
+frontend/*.map            # Mapas de compilación (innecesarios en producción)
+frontend/*.scss            # Mapas de compilación (innecesarios en producción)
+
+# === GENERALES ===
+.DS_Store                 # Archivos del sistema macOS
+Thumbs.db                 # Archivos del sistema Windows
+*.log                     # Logs de npm o errores
+*.tmp                     # Archivos temporales

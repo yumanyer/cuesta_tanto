@@ -1,0 +1,9 @@
+{
+    "editor.formatOnSave": false,
+    "files.autoSaveWhenNoErrors": false,
+    "files.trimTrailingWhitespace": false,
+    "files.simpleDialog.enable": false,
+    "files.trimFinalNewlines": false,
+    "prettier.requireConfig": false,
+    "liveServer.settings.port": 5500
+}

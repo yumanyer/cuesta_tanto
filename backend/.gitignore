@@ -1,0 +1,5 @@
+/developer.env
+node_modules/
+/nodemon.*
+*.txt
+logs/

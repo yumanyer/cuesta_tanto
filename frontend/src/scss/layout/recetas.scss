@@ -1,0 +1,210 @@
+@use "../util/mixin.scss" as *;
+
+
+.recetas-app-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+
+.recetas-main {
+    flex: 1; /* ocupa el resto */
+}
+
+// Contenido principal
+.recetas-content {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 100%;
+}
+
+// Vistas
+.view {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}
+
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.view-title {
+  font-family: font-open-sans(400)
+;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: $color-text-primary;
+}
+
+.modal-title-receta{
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $color-text-primary;
+}
+#recetasContainer {
+  height: 800px;
+    overflow: auto;
+}
+
+#recetasContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+#recetasContainer::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+#recetasContainer::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+// Cards
+.recipe-card {
+  @include card-style;
+  padding: 1.5rem; // override padding si querés más chico
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-family: font-open-sans(400)
+;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: $color-text-primary;
+  margin-bottom: 0.5rem;
+}
+
+.card-description {
+  color: $color-text-secondary;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  height: 50px;
+}
+
+.recipe-cost-info {
+  background: $color-dark-alt;
+  border-radius: $radius-input;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid $glass-border;
+}
+
+.cost-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.cost-label {
+  color: $color-text-secondary;
+  font-weight: 500;
+}
+
+.cost-value {
+  color: $color-text-primary;
+  font-weight: 600;
+}
+
+.total-cost {
+  color: $color-success;
+  font-size: 1.1rem;
+}
+
+.unit-cost {
+  color: $color-accent;
+  font-size: 1.1rem;
+}
+.ingredients-items {
+  height: 200px;
+  overflow: auto;
+}
+
+.ingredients-items::-webkit-scrollbar{
+  width: 6px;
+}
+
+.ingredinents-items::-webkit-scrollbar-track {
+  background: rgb(255, 255, 255, 0.05);
+  border-radius: $radius-sm;
+}
+
+.ingredinents-items::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-sm;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.card-btn {
+  background: $color-bt-bg;
+  color: $color-text-secondary;
+  border: 1px solid $glass-border;
+  border-radius: $radius-button;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all $transition-fast;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  text-decoration: none;
+
+  &:hover {
+    background: $color-accent;
+    color: white;
+    transform: scale(1.05);
+  }
+
+  &.danger:hover {
+    background: $color-danger;
+  }
+}
+
+// Estados vacíos
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: $color-text-secondary;
+
+  i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: $color-placeholder;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: $color-text-primary;
+  }
+}

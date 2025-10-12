@@ -1,0 +1,488 @@
+@use "../util/mixin.scss" as *;
+
+// ===============================
+// Sidebar Responsive
+// ===============================
+.app-sidebar {
+  grid-area: sidebar;
+  background: $color-dark-alt;
+  border-right: 1px solid $glass-border;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  transition: width 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+  height: 100vh;
+  position: relative;
+  z-index: 1000;
+
+  // ---------------------------
+  // Estado colapsado
+  // ---------------------------
+  &.collapsed {
+    width: 55px;
+  }
+
+  // ---------------------------
+  // Brand
+  // ---------------------------
+  .sidebar-brand {
+    padding: 0 24px 32px;
+    border-bottom: 1px solid $glass-border;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: opacity 0.3s ease;
+
+    .brand-logo {
+      font-size: 19px;
+      font-weight: 700;
+      background: $gradient-accent-navbar;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: $color-text-secondary;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+  }
+
+  &.collapsed .sidebar-brand {
+    opacity: 0;
+  }
+
+  // ---------------------------
+  // Navegación
+  // ---------------------------
+  .sidebar-nav {
+    flex: 1;
+    padding: 24px 0;
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      color: $color-text-secondary;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border-left: 3px solid transparent;
+      position: relative;
+
+      &:hover,
+      &.active {
+        background: $glass-bg;
+        color: $color-text-primary;
+        border-left-color: $color-accent;
+      }
+
+      &.active::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 2px;
+        background: $color-accent;
+      }
+
+      .nav-icon {
+        margin-right: 12px;
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .nav-label {
+        font-size: 14px;
+        font-weight: 500;
+        transition: opacity 0.3s;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+    }
+  }
+
+  &.collapsed .nav-label {
+    opacity: 0;
+  }
+
+  // ---------------------------
+  // Toggle interno
+  // ---------------------------
+  .sidebar-toggle {
+    padding: 0 16px;
+    margin-bottom: 24px;
+
+    button {
+      width: 100%;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: $color-text-primary;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(1.05);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+
+  // Animación del icono cuando está colapsado
+  &.collapsed .sidebar-toggle button {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* ===== Navbar User ===== */
+.user-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin: 0 16px;
+}
+
+.user-dropdown:hover {
+  background: #383838a1;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  overflow: hidden;
+}
+
+.user-name {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email {
+  color: #666;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Ocultar info de usuario cuando está colapsado
+.app-sidebar.collapsed .user-info {
+  display: none;
+}
+
+.dialog {
+  border: none;
+  border-radius: $radius-card;
+  padding: 0;
+  background: transparent;
+  width: 90%;
+  max-width: 400px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+  }
+
+  .logout-form {
+    @include card-base;
+    text-align: center;
+    color: $color-text-primary;
+    padding: 2rem;
+
+    .dialog-title {
+      margin-bottom: $spacing-md;
+      @include font-open-sans(700);
+      font-size: 1.2rem;
+    }
+
+    .btn-dialog {
+      border: none;
+      border-radius: $radius-button;
+      padding: 12px 20px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all $transition-fast;
+      margin: 0.5rem;
+      width: auto;
+      min-width: 120px;
+    }
+
+    .btn-cancel {
+      background: $color-dark-alt;
+      color: $color-text-primary;
+
+      &:hover {
+        background: $color-dark;
+      }
+    }
+
+    .btn-confirm {
+      background: $gradient-button;
+      color: white;
+
+      &:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: $shadow-hover;
+      }
+    }
+  }
+}
+
+// ===============================
+// RESPONSIVE BREAKPOINTS
+// ===============================
+
+// Tablets (768px - 1024px)
+@media (max-width: 1024px) {
+  .app-sidebar {
+    width: 180px;
+
+    &.collapsed {
+      width: 55px;
+    }
+
+    .sidebar-brand {
+      padding: 0 16px 24px;
+
+      .brand-logo {
+        font-size: 17px;
+      }
+
+      .brand-subtitle {
+        font-size: 10px;
+      }
+    }
+
+    .sidebar-nav .nav-item {
+      padding: 10px 12px;
+
+      .nav-label {
+        font-size: 13px;
+      }
+    }
+  }
+
+  .user-dropdown {
+    gap: 0.4rem;
+    padding: 0.3rem 0.4rem;
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+// Mobile landscape y tablets pequeñas (481px - 768px)
+@media (max-width: 768px) {
+  .app-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    transform: translateX(-100%);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+
+    &.mobile-open {
+      transform: translateX(0);
+    }
+
+    &.collapsed {
+      transform: translateX(-100%);
+    }
+
+    .sidebar-brand {
+      opacity: 1 !important;
+    }
+
+    .nav-label {
+      opacity: 1 !important;
+    }
+
+    .user-info {
+      display: flex !important;
+    }
+  }
+
+  // Overlay para cerrar sidebar en mobile
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+
+    &.active {
+      display: block;
+    }
+  }
+
+  // Botón hamburguesa siempre visible en mobile
+  .mobile-menu-btn {
+    display: block;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: $color-dark-alt;
+    border: 1px solid $glass-border;
+    color: $color-text-primary;
+    font-size: 24px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      background: $glass-bg;
+    }
+  }
+}
+
+// Mobile portrait (320px - 480px)
+@media (max-width: 480px) {
+  .app-sidebar {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .dialog {
+    width: 95%;
+    max-width: 320px;
+
+    .logout-form {
+      padding: 1.5rem;
+
+      .dialog-title {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+
+      .btn-dialog {
+        padding: 10px 16px;
+        font-size: 14px;
+        min-width: 100px;
+        margin: 0.3rem;
+      }
+    }
+  }
+
+  .user-dropdown {
+    margin: 0 12px;
+  }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .user-info {
+    font-size: 0.75rem;
+
+    .user-email {
+      font-size: 11px;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// ===============================
+// Botón Hamburguesa Móvil
+// ===============================
+.mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  background: $color-dark-alt;
+  border: 1px solid $glass-border;
+  color: $color-text-primary;
+  font-size: 24px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  line-height: 1;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: $glass-bg;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Mostrar botón hamburguesa solo en mobile
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block !important;
+  }
+}
+
+// Ocultar overlay en desktop
+@media (min-width: 769px) {
+  .sidebar-overlay {
+    display: none !important;
+  }
+  
+  .mobile-menu-btn {
+    display: none !important;
+  }
+}

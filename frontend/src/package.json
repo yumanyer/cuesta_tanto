@@ -1,0 +1,16 @@
+{
+  "name": "frontend",
+  "version": "2.5.0",
+  "description": "Frontend Cuanto_Cuesta",
+"scripts": {
+  "sass": "sass scss/style.scss ../public/css/style.css --watch --style=compressed",
+  "sa": "sass ./scss:../public/css --watch"
+
+}
+,
+  "author": "yumanyer",
+  "license": "ISC",
+  "devDependencies": {
+    "sass": "1.77.0"
+  }
+}
