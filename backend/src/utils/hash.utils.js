@@ -11,7 +11,6 @@ export async function createHash(Password){
 
     return hashPassword
     } catch (error) {
-        console.log("Se genero un error al hashear la contra", error)
         return null
     }
 }
@@ -23,7 +22,6 @@ export async function verifyPassword(Password,hash) {
 
     return truePassword
     } catch (error) {
-        console.log("Error al comparar contraseñas", error)
         return false; // throw error para que tome el error
     }
 }

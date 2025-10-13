@@ -31,5 +31,4 @@ export async function TriggerDeleteIngrediente() {
     $$ LANGUAGE plpgsql;
   `;
   await dataBase.query(query);
-  console.log("✅ Trigger creado/actualizado: recalcular_precio_al_eliminar");
 }

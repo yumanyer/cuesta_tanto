@@ -15,7 +15,6 @@ export async function fetchWithAuth(url, options = {}) {
             throw new Error("Sesión expirada. Por favor logueate nuevamente.");
         }
 
-        console.log("✅ Refresh exitoso. Reintentando la petición original...");
         res = await fetch(url, options);
     }
 

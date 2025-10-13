@@ -28,26 +28,19 @@ export async function createIngrediente(req, res) {
 // En el CONTROLLER
 export async function bulkCreateIngrediente(req, res) {
   try {
-    console.log("1️⃣ Inicio controller - hola");
     const { receta_id, ingredientes } = req.body;
-    console.log("2️⃣ Body recibido:", { receta_id, ingredientes });
     
     const user_id = req.user?.id;
-    console.log("3️⃣ User ID:", user_id);
     
     if (!user_id) return res.status(401).json({ details: "No autorizado" });
     if (!receta_id || !Array.isArray(ingredientes) || ingredientes.length === 0) {
-      console.log("4️⃣ ❌ Validación falló");
       return res.status(422).json({ details: "Debe enviar al menos un ingrediente" });
     }
     
-    console.log("5️⃣ Llamando al modelo...");
     const created = await instanciaIngredientes.bulkCreateIngrediente(user_id, receta_id, ingredientes);
-    console.log("6️⃣ ✅ Respuesta del modelo:", created);
    
     return res.status(201).json(created);
   } catch (error) {
-    console.error("7️⃣ ❌ Error capturado:", error);
     return res.status(400).json({ details: error.message || "Error en la creación de ingredientes" });
   }
 }

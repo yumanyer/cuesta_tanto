@@ -33,5 +33,4 @@ export async function TriggerActualizarPrecio() {
     $$ LANGUAGE plpgsql;
   `;
   await dataBase.query(query);
-  console.log("✅ Trigger creado/actualizado: recalcular_precio_por_materia");
 }

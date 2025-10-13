@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
 import { config } from "./env.config.js";
 
-console.log(config.JWT_SECRET)
-console.log(config.JWT_REFRESH_SECRET)
+
 
 // Genera Access Token (corto plazo)
 export function generateAccessToken(payload) {

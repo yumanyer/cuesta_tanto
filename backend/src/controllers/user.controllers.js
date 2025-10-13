@@ -118,7 +118,6 @@ export async function logoutUser(req, res) {
 
 // Endpoint para renovar access token
 export async function refreshAccessToken(req, res) {
-      console.log("Cookies recibidas:", req.cookies); // Aquí ves refreshToken
 
   try {
     const token = req.cookies.refreshToken;

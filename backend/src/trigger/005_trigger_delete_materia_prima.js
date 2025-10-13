@@ -34,8 +34,7 @@ export async function TriggerEliminarMateriaPrima() {
 
   try {
     await dataBase.query(query);
-    console.log("✅ Trigger creado/actualizado: eliminar materia prima y recalcular recetas");
   } catch (err) {
-    console.error("❌ Error creando trigger eliminar materia prima:", err);
+    throw err;
   }
 }

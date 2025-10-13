@@ -1,4 +1,7 @@
 import { fetchWithAuth,cargarUsuario,showToast} from "./services/api.js";
+import {playAudio} from "./services/shared.js";
+
+
 cargarUsuario();
 // --- DOM SELECTORS ---
 const productos_encontrados = document.querySelector('#productosTable tbody');
@@ -16,28 +19,49 @@ const templateDeleteModal = document.getElementById("deleteModalTemplate");
 const userDropdown = document.getElementById('userDropdown');
 const dialog = document.querySelector('dialog');
 const logoutForm = document.querySelector('.logout-form');
+const audio = document.getElementById("audio");
 
-userDropdown.addEventListener('click', (e) => {dialog.showModal()});
+
+
+userDropdown.addEventListener('click', (e) => {
+    dialog.showModal();
+});
+
 logoutForm.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' && e.target.value) {
         e.preventDefault();
+        
         if (e.target.value === 'yes') {
-            console.log('Cerrando sesión...');
-            fetchWithAuth('/api/users/logout', {
-                method: 'POST',
-                credentials: 'include'
-            });
-            window.location.href = '/pages/login.html';
-        } else if (e.target.value === 'no') {
-            console.log('Cancelando...');
-        }
-        dialog.close();
+            
+            // Intenta reproducir directamente
+            audio.currentTime = 0;
+            audio.play()
 
-    });
+            // Esperar a que el audio termine
+            audio.addEventListener('ended', () => {
+                fetchWithAuth('/api/users/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                .then(() => {
+                    window.location.href = '/pages/login.html';
+                })
+                .catch(error => {
+                    window.location.href = '/pages/login.html';
+                });
+            }, { once: true });
+            
+        } else if (e.target.value === 'no') {
+            showToast("Cancelando sesión...", "info");
+            dialog.close();
+        }
+    }
+});
 
 
 
 // --- VARIABLES ---
-let productosData = [];      // Productos de la página actual
+let productosData = [];      
 let currentPage = 1;
 const rowsPerPage = 5;
 
@@ -116,7 +140,6 @@ async function loadProducts(page = 1) {
         if (!res.ok) throw new Error("Error al cargar productos");
 
         const data = await res.json();
-        console.log("materias priamsa cargadas:", data);
         productosData = data.producto_encontrado;
         currentPage = data.currentPage;
         renderTable();
@@ -137,7 +160,7 @@ async function createProduct(producto){
             const e = await res.json(); 
             throw new Error(e.details || "Error"); 
         }
-        loadProducts(1); // Recarga primera página
+        loadProducts(1);
     }catch(err){ showToast("Error al crear el producto", "error"); }
 }
 

@@ -167,6 +167,5 @@
       }
     }, { passive: true });
 
-    console.log('Mobile menu initialized');
   });
 })();

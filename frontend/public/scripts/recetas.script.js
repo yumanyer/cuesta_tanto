@@ -1,16 +1,10 @@
-// =========================
-// 📦 IMPORTS
-// =========================
+//  IMPORTS
 import { cargarUsuario, fetchWithAuth, showToast } from "./services/api.js";
 
-// =========================
-// 👤 INICIALIZACIÓN DE USUARIO
-// =========================
+//  INICIALIZACIÓN DE USUARIO
 cargarUsuario();
 
-// =========================
-// 🧭 SIDEBAR
-// =========================
+//  SIDEBAR
 const sidebar = document.getElementById("sidebar");
 const toggleBtn = document.getElementById("toggleBtn");
 
@@ -23,38 +17,60 @@ const toggleBtn = document.getElementById("toggleBtn");
 
     }
     window.addEventListener("resize", autoCollapseSidebar);
-// =========================
-// 🔐 LOGOUT DIALOG
-// =========================
-const userDropdown = document.getElementById("userDropdown");
-const dialog = document.querySelector("dialog");
-const logoutForm = document.querySelector(".logout-form");
 
-if (userDropdown && dialog && logoutForm) {
-  userDropdown.addEventListener("click", () => dialog.showModal());
+// 🎯 LOGOUT
+const userDropdown = document.getElementById('userDropdown');
+const dialog = document.querySelector('dialog');
+const logoutForm = document.querySelector('.logout-form');
+const audio = document.getElementById("audio");
 
-  logoutForm.addEventListener("click", async (e) => {
-    e.preventDefault();
-    if (e.target.value === "yes") {
-      await fetchWithAuth("/api/users/logout", { method: "POST", credentials: "include" });
-      window.location.href = "/pages/login.html";
+
+
+userDropdown.addEventListener('click', (e) => {
+    dialog.showModal();
+});
+
+logoutForm.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' && e.target.value) {
+        e.preventDefault();
+        
+        if (e.target.value === 'yes') {
+            
+            // Intenta reproducir directamente
+            audio.currentTime = 0;
+            audio.play()
+
+            // Esperar a que el audio termine
+            audio.addEventListener('ended', () => {
+                fetchWithAuth('/api/users/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                .then(() => {
+                    window.location.href = '/pages/login.html';
+                })
+                .catch(error => {
+                    window.location.href = '/pages/login.html';
+                });
+            }, { once: true });
+            
+        } else if (e.target.value === 'no') {
+            showToast("Cancelando sesión...", "info");
+            dialog.close();
+        }
     }
-    dialog.close();
-  });
-}
+});
 
-// =========================
+
 // 📋 CONTENEDORES Y TEMPLATES
-// =========================
 const recetaTemplate = document.getElementById("recipeCardTemplate");
 const recetasContainer = document.getElementById("recetasContainer");
 const templateDeleteModal = document.getElementById("deleteModalTemplate");
 const templateCreateModal = document.getElementById("createModalTemplate");
 const btnAddRecipe = document.getElementById("btnAddRecipe");
 
-// =========================
-// 🚀 FUNCIONES API
-// =========================
+
+//  FUNCIONES API
 async function getRecetas() {
   try {
     const res = await fetchWithAuth("/api/recetas/get");
@@ -140,7 +156,6 @@ async function verRecetaIngredientes(idReceta) {
     if (!res.ok) throw new Error("Error al obtener receta");
 
     const receta = await res.json();
-    console.log("Datos recibidos:", receta);
 
     const template = document.getElementById("viewIngredientsModalTemplate");
     if (!template) {
@@ -198,9 +213,7 @@ async function verRecetaIngredientes(idReceta) {
   }
 }
 
-// =========================
-// 🧩 RENDERIZAR TARJETA
-// =========================
+// RENDERIZAR TARJETA
 function renderRecetaCard(receta) {
   const clone = recetaTemplate.content.cloneNode(true);
   const card = clone.querySelector(".recipe-card");
@@ -226,9 +239,7 @@ function renderRecetaCard(receta) {
   recetasContainer.appendChild(clone);
 }
 
-// =========================
-// 🧠 MODALES CREAR/EDITAR
-// =========================
+//  MODALES CREAR/EDITAR
 function openCreateOrEditModal(receta = null) {
   const modal = templateCreateModal.content.cloneNode(true).querySelector(".modal-overlay");
   document.body.appendChild(modal);
@@ -271,9 +282,8 @@ function openCreateOrEditModal(receta = null) {
   });
 }
 
-// =========================
-// 🧱 MODAL ELIMINAR
-// =========================
+
+//  MODAL ELIMINAR
 function openDeleteModal(idReceta) {
   const modal = templateDeleteModal.content.cloneNode(true).querySelector(".modal-overlay");
   document.body.appendChild(modal);
@@ -292,20 +302,15 @@ function openDeleteModal(idReceta) {
   });
 }
 
-// =========================
-// 🔒 CERRAR MODALES
-// =========================
+//  CERRAR MODALES
 function closeModal(modal) {
   modal.remove();
   document.body.style.overflow = "auto";
 }
 
-// =========================
-// 🎯 BOTÓN CREAR NUEVA RECETA
-// =========================
+//  BOTÓN CREAR NUEVA RECETA
 btnAddRecipe?.addEventListener("click", () => openCreateOrEditModal());
+toggleBtn.addEventListener("click", ()=>sidebar.classList.toggle("collapsed"));
 
-// =========================
-// 🚀 INICIO
-// =========================
+//  INICIO
 getRecetas();

@@ -29,8 +29,7 @@ export async function TriggerInsertarIngrediente() {
 
   try {
     await dataBase.query(query);
-    console.log("✅ Trigger creado/actualizado: insertar ingrediente y recalcular recetas");
   } catch (err) {
-    console.error("❌ Error creando trigger insertar ingrediente:", err);
+    throw err;
   }
 }

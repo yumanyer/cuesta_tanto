@@ -5,20 +5,47 @@
   cargarUsuario();
 
   // 🎯 LOGOUT
-  const userDropdown = document.getElementById('userDropdown');
-  const dialog = document.querySelector('dialog');
-  const logoutForm = document.querySelector('.logout-form');
+const userDropdown = document.getElementById('userDropdown');
+const dialog = document.querySelector('dialog');
+const logoutForm = document.querySelector('.logout-form');
+const audio = document.getElementById("audio");
 
-  userDropdown.addEventListener('click', () => dialog.showModal());
 
-  logoutForm.addEventListener('click', async (e) => {
-    e.preventDefault();
-    if (e.target.value === 'yes') {
-      await fetchWithAuth('/api/users/logout');
-      window.location.href = '/pages/login.html';
+
+userDropdown.addEventListener('click', (e) => {
+    dialog.showModal();
+});
+
+logoutForm.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' && e.target.value) {
+        e.preventDefault();
+        
+        if (e.target.value === 'yes') {
+            
+            // Intenta reproducir directamente
+            audio.currentTime = 0;
+            audio.play()
+
+            // Esperar a que el audio termine
+            audio.addEventListener('ended', () => {
+                fetchWithAuth('/api/users/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                .then(() => {
+                    window.location.href = '/pages/login.html';
+                })
+                .catch(error => {
+                    window.location.href = '/pages/login.html';
+                });
+            }, { once: true });
+            
+        } else if (e.target.value === 'no') {
+            showToast("Cancelando sesión...", "info");
+            dialog.close();
+        }
     }
-    dialog.close();
-  });
+});
 
   // 🎯 SIDEBAR COLLAPSE
   const sidebar = document.querySelector(".app-sidebar");
@@ -64,7 +91,6 @@
   const res = await fetchWithAuth("/api/matterRaw/get?all=true"); 
       if (!res.ok) throw new Error("Error al cargar materias primas");
       const data = await res.json();
-      console.log("materias primas obtenidas:", data);
       materiasCache = data.producto_encontrado;
       fillSelect(selectMateriaPrima, materiasCache);
     } catch (error) {
@@ -107,7 +133,6 @@ function fillSelect(selectElement, materias) {
       ingredientes: ingredientes
     };
 
-    console.log("Payload que se enviará:", JSON.stringify(body, null, 2));
 
     try {
       const res = await fetchWithAuth("/api/ingrediente/bulkCreate", {
@@ -119,10 +144,9 @@ function fillSelect(selectElement, materias) {
       if (!res.ok) throw new Error("Error al agregar ingredientes");
 
       showToast("Ingredientes agregados exitosamente" , "success");
-      console.log("Respuesta del servidor:", await res.json());
-      console.log("Ingredientes agregados:", ingredientes);
+     
     } catch (error) {
-      console.error("Error agregando ingredientes:", error);
+      throw error;
     }
   }
 
@@ -143,14 +167,12 @@ function fillSelect(selectElement, materias) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateData)
       });
-      console.log("Payload enviado para actualizar:", updateData);
       if (!res.ok) throw new Error("Error al actualizar ingrediente");
       const data = await res.json();
             
       const ingredienteItem = document.querySelector(
         `.ingrediente-ingredient-item[data-id='${ingredienteId}']`
       )
-      console.log("Ingrediente actualizado obtenido:", data);
     
       // actualizar UI
       if (ingredienteItem) {
@@ -189,9 +211,8 @@ function fillSelect(selectElement, materias) {
         const ingredienteItem = listIndividual.querySelector(`.ingrediente-ingredient-item[data-id='${ingredienteId}']`);
         ingredienteItem.remove();
       }
-      showToast("Ingrediente eliminado exitosamente", "success");
+      showToast("Ingrediente eliminado exitosamente", "info");
     } catch (error) {
-      console.error("Error eliminando ingrediente:", error);
       throw error;
     }
     
@@ -210,7 +231,6 @@ function fillSelect(selectElement, materias) {
       const res = await fetchWithAuth(`/api/recetas/detail/${recetaId}`);
       if (!res.ok) throw new Error("Error al cargar ingredientes de la receta");
       const data = await res.json();
-      console.log("Detalle de receta obtenido:", data);
 
       if (!data.ingredientes || data.ingredientes.length === 0) return;
 
@@ -220,8 +240,8 @@ data.ingredientes.forEach(i => {
   const precioUnitario = materia ? parseFloat(materia.precio_unitario) : parseFloat(i.precio);
 
   ingredienteManager.addIngredient({
-    id: i.id || i.ingrediente_id,  // ← ID del ingrediente en la BD
-    materiaPrimaId: i.materia_prima_id,  // ← ID de la materia prima
+    id: i.id || i.ingrediente_id,  
+    materiaPrimaId: i.materia_prima_id,  
     nombre: i.nombre_producto,
     cantidad: parseFloat(i.cantidad_usada),
     unidad: i.unidad,
@@ -256,6 +276,15 @@ data.ingredientes.forEach(i => {
 
     const materia = materiasCache.find(m => m.id == materiaId);
     if (!materia) return;
+
+      //  VALIDACIÓN DE UNIDAD 
+  if (unidad !== materia.unidad) {
+    showToast(
+      `No se puede agregar en ${unidad}. Esta materia prima está registrada en ${materia.unidad}.`,
+      "error"
+    );
+    return;
+  }
 
     // Validar stock
     if (!ingredienteManager.validateStock(materia, cantidad, unidad)) return;
@@ -310,7 +339,6 @@ data.ingredientes.forEach(i => {
   function renderIngrediente(ingrediente) {
     const tpl = document.getElementById("tpl-ingrediente");
     const clone = tpl.content.cloneNode(true);
-    console.log("Ingrediente a renderizarclarooooooooo:", ingrediente);
     const item = clone.querySelector(".ingrediente-ingredient-item");
 
     // datasets
@@ -363,7 +391,6 @@ saveBtn.addEventListener("click", () => {
     cantidad_usada: Number(cantidadInput.value),
     unidad: unidadSelect.value
   };
-  console.log("Ingrediente a actualizar:", ingrediente);
   updateIngredient(ingredienteItem.dataset.id, ingrediente);
   closeModal();
 }, { once: true });
@@ -382,7 +409,6 @@ saveBtn.addEventListener("click", () => {
 
       overlay.querySelector(".ing-name").textContent = nombre;
     
-    console.log("nombre de ingrediente a eliminar", nombre);
       function closeModal() {
       overlay.remove();
     }
@@ -410,11 +436,11 @@ confirmBtn.addEventListener("click", () => {
   const ingredientes = document.querySelectorAll(".ingrediente-ingredient-item");
 
   ingredientes.forEach(item => {
+
     // Solo actuar sobre los que eran agregados
     if (item.dataset.origen === "agregado") {
-      item.dataset.origen = "precargado"; // Cambiar origen lógico
+      item.dataset.origen = "precargado"; 
 
-      // Cambiar clase visual (rojo → azul, por ejemplo)
       item.classList.remove("agregado");
       item.classList.add("precargado");
 

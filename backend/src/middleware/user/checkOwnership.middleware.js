@@ -21,7 +21,6 @@ export const checkOwnership = async (req, res, next) => {
       message: "No tenés permisos para acceder a este recurso",
     });
   } catch (error) {
-    console.log("Error verificando propiedad:", error);
     return res.status(500).json({
       message: "Error interno del servidor",
     });

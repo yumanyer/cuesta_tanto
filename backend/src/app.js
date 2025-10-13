@@ -44,9 +44,7 @@ app.use(express.static(publicPath))
  // CONEXION A LA postgreSQL
 dataBase.query("SELECT NOW()")
 .then(()=>{
-    console.log("Base de datos conectada")
     console.time("Conexión a la base de datos")
-    console.log("NODE_ENV =", process.env.NODE_ENV);
     InitApp()
     console.timeEnd("Conexión a la base de datos")
 })
@@ -88,8 +86,7 @@ async function InitApp(){
          // UNA VEZ CONECTADA LA DB INICIO LA APP
          //2-3 ms
          console.time("Inicio de la aplicación")
-        app.listen(config.port, ()=>{
-        console.log(`Escuchando a http://localhost:${config.port} ` )})
+        app.listen(config.port, ()=>{})
         console.timeEnd("Inicio de la aplicación")
     } catch (error) {
         console.error('No se pudo conectar a la base de datos:', error);
