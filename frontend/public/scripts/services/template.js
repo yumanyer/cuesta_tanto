@@ -5,11 +5,27 @@ class IngredienteTemplate {
     this.totalCostEl = totalCostElement;
     this.emptyState = emptyStateElement;
     this.createTemplate();
+      this.setupRemoveOnClear(); 
+
   }
 
   createTemplate() {
     this.template = document.getElementById("tpl-ingrediente");
   }
+
+// Manejar eventos de eliminación directa (botón "Quitar")
+setupRemoveOnClear() {
+  this.list.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-action='clear']");
+    if (!btn) return;
+
+    const item = btn.closest(".ingrediente-ingredient-item");
+    if (item) {
+      this.removeIngredient(item); 
+    }
+  });
+}
+
 
   // Crear ingrediente desde datos
   createIngredientElement(data) {

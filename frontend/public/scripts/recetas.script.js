@@ -156,6 +156,7 @@ async function verRecetaIngredientes(idReceta) {
     if (!res.ok) throw new Error("Error al obtener receta");
 
     const receta = await res.json();
+    console.log("valor de receta", receta);
 
     const template = document.getElementById("viewIngredientsModalTemplate");
     if (!template) {
@@ -165,11 +166,11 @@ async function verRecetaIngredientes(idReceta) {
     }
 
     const modal = template.content.cloneNode(true).querySelector(".modal-overlay");
-
+    console.log("valor de modal", modal);
     // Datos generales
     modal.querySelector(".view-nombre").textContent = receta.nombre_receta || "Sin nombre";
     modal.querySelector(".view-descripcion").textContent = receta.descripcion || "Sin descripción";
-    modal.querySelector(".view-porciones").textContent = receta.porciones || 1;
+modal.querySelector(".view-porciones").textContent = document.querySelector(".portions-value").textContent;
 
     // Ingredientes
     const ul = modal.querySelector(".ingredients-items");
