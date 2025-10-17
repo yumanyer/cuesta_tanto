@@ -83,6 +83,12 @@ async function InitApp(){
         app.get("/",(req,res)=>{
             res.sendFile(path.join(publicPath,"home.html"))
         })
+
+        if(req.statusCode == 401){
+            res.sendFile(path.join(publicPath,"home.html"))
+        }
+
+
          // UNA VEZ CONECTADA LA DB INICIO LA APP
          //2-3 ms
          console.time("Inicio de la aplicación")
