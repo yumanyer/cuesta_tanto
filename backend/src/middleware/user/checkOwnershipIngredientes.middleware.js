@@ -7,7 +7,7 @@ export const checkOwnershipIngrediente = async (req, res, next) => {
 
     // Buscar receta asociada al ingrediente
     const result = await dataBase.query(
-      "SELECT receta_id FROM cuesta_tanto.ingredientes WHERE id = $1",
+      "SELECT receta_id FROM ingredientes WHERE id = $1",
       [ingrediente_id]
     );
 
@@ -18,7 +18,7 @@ export const checkOwnershipIngrediente = async (req, res, next) => {
 
     // Verificar que el usuario sea dueño de la receta
     const recetaPropietario = await dataBase.query(
-      "SELECT 1 FROM cuesta_tanto.recetas WHERE id = $1 AND user_id = $2",
+      "SELECT 1 FROM recetas WHERE id = $1 AND user_id = $2",
       [receta_id, user_id]
     );
 

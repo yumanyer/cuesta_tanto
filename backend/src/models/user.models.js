@@ -8,7 +8,7 @@
             if(!hashedPassword){
             throw new Error("Error generando hash de la contraseña");
             }
-        const query = `INSERT INTO cuesta_Tanto.usuarios  ("Name", "Email", "Password","Rol") VALUES ($1, $2, $3, $4) RETURNING "id", "Name", "Email"`
+        const query = `INSERT INTO usuarios  ("Name", "Email", "Password","Rol") VALUES ($1, $2, $3, $4) RETURNING "id", "Name", "Email"`
         const values = [Name,Email,hashedPassword,Rol]
         console.time("createUser")
         const resultado = await  dataBase.query(query,values)
@@ -22,7 +22,7 @@
 
     export async function setRefreshToken(userId,refreshToken){
         try {
-            const query = `UPDATE cuesta_Tanto.usuarios SET refresh_token = $1 WHERE "id" = $2`
+            const query = `UPDATE usuarios SET refresh_token = $1 WHERE "id" = $2`
             const values = [refreshToken,userId]
             console.time("setRefreshToken")
             const resultado =await  dataBase.query(query,values)

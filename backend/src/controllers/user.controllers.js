@@ -46,7 +46,7 @@ export async function loginUser(req, res) {
 
   try {
     const result = await dataBase.query(
-      'SELECT id, "Email", "Password", "Rol", "Name" FROM cuesta_tanto.usuarios WHERE "Email" = $1',
+      'SELECT id, "Email", "Password", "Rol", "Name" FROM usuarios WHERE "Email" = $1',
       [Email]
     );
     if (!result.rows.length) return res.status(401).json({ details: "Usuario o contraseña incorrectos" });
@@ -90,7 +90,7 @@ export async function logoutUser(req, res) {
     }
 
     // 2️⃣ Buscar usuario en la DB por refresh token
-    const query = `SELECT id FROM cuesta_tanto.usuarios WHERE refresh_token = $1`;
+    const query = `SELECT id FROM usuarios WHERE refresh_token = $1`;
     const values = [refreshToken];
     const result = await dataBase.query(query, values);
 
@@ -99,7 +99,7 @@ export async function logoutUser(req, res) {
 
       // 3️⃣ Invalidate refresh token en DB
       await dataBase.query(
-        `UPDATE cuesta_tanto.usuarios SET refresh_token = NULL WHERE id = $1`,
+        `UPDATE usuarios SET refresh_token = NULL WHERE id = $1`,
         [userId]
       );
     }
@@ -125,7 +125,7 @@ export async function refreshAccessToken(req, res) {
 
     // 1️⃣ Buscar usuario con este refresh token en la DB
     const query = `SELECT id, "Name", "Email", "Rol", "refresh_token" 
-                   FROM cuesta_tanto.usuarios WHERE refresh_token = $1`;
+                   FROM usuarios WHERE refresh_token = $1`;
     const values = [token];
     const result = await dataBase.query(query, values);
 

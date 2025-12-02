@@ -8,7 +8,7 @@ if (!req.is("application/json")) {
 }
     try {
         const {Email} = req.body
-        const result = await dataBase.query('SELECT * FROM cuesta_tanto.usuarios WHERE "Email" = $1', [Email]);
+        const result = await dataBase.query('SELECT * FROM usuarios WHERE "Email" = $1', [Email]);
         if(result.rows.length>0){
             return res.status(409)
             .json({

@@ -14,7 +14,7 @@ export class Recetas{
 
     async createReceta(user_id,nombre_receta,descripcion,porciones){
         try {
-            const query = "INSERT INTO cuesta_tanto.recetas(user_id,nombre_receta,descripcion,precio_total,porciones) VALUES ($1,$2,$3,$4,$5) RETURNING *"   
+            const query = "INSERT INTO recetas(user_id,nombre_receta,descripcion,precio_total,porciones) VALUES ($1,$2,$3,$4,$5) RETURNING *"   
             //precio total se emepzo a calcular dinamicamente con los ingredientes, por eso lo saco del create
             const values = [user_id,nombre_receta,descripcion,0,porciones]
             console.time("crearReceta")
@@ -30,7 +30,7 @@ export class Recetas{
     async getRecetaUser(user_id){
         try {
             const query=`
-            SELECT * FROM cuesta_tanto.recetas
+            SELECT * FROM recetas
             WHERE user_id=$1 
             ORDER BY ID 
             `
@@ -61,10 +61,10 @@ export class Recetas{
                 m.nombre_producto,
                 m.precio,
                 i.cantidad_usada
-            FROM cuesta_tanto.recetas AS r
-            LEFT JOIN cuesta_tanto.ingredientes AS i
+            FROM recetas AS r
+            LEFT JOIN ingredientes AS i
                 ON i.receta_id = r.id
-            LEFT JOIN cuesta_tanto.materia_prima AS m
+            LEFT JOIN materia_prima AS m
                 ON m.id = i.materia_prima_id
             WHERE r.id = $1
         `;
@@ -112,7 +112,7 @@ export class Recetas{
     async updateReceta(id,nombre_receta,descripcion,porciones){
         try {
             const query=`
-            UPDATE cuesta_tanto.recetas
+            UPDATE recetas
             set nombre_receta=$1,descripcion=$2,porciones=$3
             where id=$4
             RETURNING *
@@ -131,7 +131,7 @@ export class Recetas{
     async  deleteReceta(id){
         try {
             const query = `
-            DELETE FROM cuesta_tanto.recetas 
+            DELETE FROM recetas 
             WHERE id = $1
             RETURNING *;
             `;

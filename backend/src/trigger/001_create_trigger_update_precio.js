@@ -7,23 +7,23 @@ import { dataBase } from "../config/connectDB.config.js";
 
 export async function TriggerActualizarPrecio() {
   const query = `
-    CREATE OR REPLACE FUNCTION cuesta_tanto.recalcular_precio_por_materia()
+    CREATE OR REPLACE FUNCTION recalcular_precio_por_materia()
     RETURNS TRIGGER AS $$
     BEGIN
       IF NEW.precio_unitario IS DISTINCT FROM OLD.precio_unitario THEN
         WITH afectadas AS (
           SELECT DISTINCT receta_id
-          FROM cuesta_tanto.ingredientes
+          FROM ingredientes
           WHERE materia_prima_id = NEW.id
         ),
         totales AS (
           SELECT i.receta_id, SUM(i.cantidad_usada * m.precio_unitario) AS total
-          FROM cuesta_tanto.ingredientes i
-          JOIN cuesta_tanto.materia_prima m ON m.id = i.materia_prima_id
+          FROM ingredientes i
+          JOIN materia_prima m ON m.id = i.materia_prima_id
           WHERE i.receta_id IN (SELECT receta_id FROM afectadas)
           GROUP BY i.receta_id
         )
-        UPDATE cuesta_tanto.recetas r
+        UPDATE recetas r
         SET precio_total = COALESCE(totales.total, 0)
         FROM totales
         WHERE r.id = totales.receta_id;

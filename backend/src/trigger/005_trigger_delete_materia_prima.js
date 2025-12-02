@@ -6,16 +6,16 @@ import { dataBase } from "../config/connectDB.config.js";
 
 export async function TriggerEliminarMateriaPrima() {
   const query = `
-    CREATE OR REPLACE FUNCTION cuesta_tanto.recalcular_precio_al_eliminar_materia()
+    CREATE OR REPLACE FUNCTION recalcular_precio_al_eliminar_materia()
     RETURNS TRIGGER AS $$
     BEGIN
       -- Recalcular las recetas que tenían ingredientes de esta materia prima eliminada
-      UPDATE cuesta_tanto.recetas r
+      UPDATE recetas r
       SET precio_total = COALESCE(sub.total, 0)
       FROM (
         SELECT i.receta_id, SUM(i.cantidad_usada * mp.precio_unitario) AS total
-        FROM cuesta_tanto.ingredientes i
-        JOIN cuesta_tanto.materia_prima mp ON mp.id = i.materia_prima_id
+        FROM ingredientes i
+        JOIN materia_prima mp ON mp.id = i.materia_prima_id
         GROUP BY i.receta_id
       ) sub
       WHERE r.id = sub.receta_id;
@@ -24,12 +24,12 @@ export async function TriggerEliminarMateriaPrima() {
     END;
     $$ LANGUAGE plpgsql;
 
-    DROP TRIGGER IF EXISTS trigger_eliminar_materia_prima ON cuesta_tanto.materia_prima;
+    DROP TRIGGER IF EXISTS trigger_eliminar_materia_prima ON materia_prima;
 
     CREATE TRIGGER trigger_eliminar_materia_prima
-    AFTER DELETE ON cuesta_tanto.materia_prima
+    AFTER DELETE ON materia_prima
     FOR EACH ROW
-    EXECUTE FUNCTION cuesta_tanto.recalcular_precio_al_eliminar_materia();
+    EXECUTE FUNCTION recalcular_precio_al_eliminar_materia();
   `;
 
   try {

@@ -25,7 +25,7 @@ export const requireAuth = (allowRoles = []) => async (req, res, next) => {
     if (!refreshToken) return res.status(401).json({ message: "No autenticado" });
 
     const result = await dataBase.query(
-      'SELECT id FROM cuesta_tanto.usuarios WHERE refresh_token = $1',
+      'SELECT id FROM usuarios WHERE refresh_token = $1',
       [refreshToken]
     );
     if (!result.rows.length) return res.status(401).json({ message: "Refresh token inválido" });

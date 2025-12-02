@@ -15,7 +15,7 @@ export class Ingredientes {
   // --- Función interna de validación ---
   async _validarStockYUnidad(client, user_id, materia_prima_id, cantidadNormalizada, unidadNormalizada) {
     const { rows: materiaRows } = await client.query(
-      `SELECT stock, unidad,nombre_producto,id FROM cuesta_tanto.materia_prima WHERE id=$1 AND user_id=$2 FOR UPDATE`,
+      `SELECT stock, unidad,nombre_producto,id FROM materia_prima WHERE id=$1 AND user_id=$2 FOR UPDATE`,
       [materia_prima_id, user_id]
     );
     if (materiaRows.length === 0) throw new Error("No tenés permisos sobre esta materia prima");
@@ -48,7 +48,7 @@ export class Ingredientes {
 
       // Verificar duplicados
       const { rows: ingredienteRows } = await client.query(
-        `SELECT id, cantidad_usada FROM cuesta_tanto.ingredientes
+        `SELECT id, cantidad_usada FROM ingredientes
          WHERE receta_id=$1 AND materia_prima_id=$2 AND user_id=$3 FOR UPDATE`,
         [receta_id, materia_prima_id, user_id]
       );
@@ -63,13 +63,13 @@ export class Ingredientes {
         stockARestar = newCantidad - ingredienteRows[0].cantidad_usada;
 
         const { rows } = await client.query(
-          `UPDATE cuesta_tanto.ingredientes SET cantidad_usada=$1 WHERE id=$2 RETURNING *`,
+          `UPDATE ingredientes SET cantidad_usada=$1 WHERE id=$2 RETURNING *`,
           [newCantidad, ingredienteRows[0].id]
         );
         ingredienteCreado = rows[0];
       } else {
         const { rows } = await client.query(
-          `INSERT INTO cuesta_tanto.ingredientes (user_id, receta_id, materia_prima_id, cantidad_usada, unidad)
+          `INSERT INTO ingredientes (user_id, receta_id, materia_prima_id, cantidad_usada, unidad)
            VALUES ($1,$2,$3,$4,$5) RETURNING *`,
           [user_id, receta_id, materia_prima_id, cantidadNormalizada, unidadNormalizada]
         );
@@ -78,15 +78,15 @@ export class Ingredientes {
 
       // Actualizar stock
       await client.query(
-        `UPDATE cuesta_tanto.materia_prima SET stock = stock - $1 WHERE id=$2`,
+        `UPDATE materia_prima SET stock = stock - $1 WHERE id=$2`,
         [stockARestar, materia_prima_id]
       );
 
       // Actualizar precio_total de la receta
       const { rows: precioRows } = await client.query(
         `SELECT SUM(i.cantidad_usada * mp.precio_unitario) AS precio_total
-         FROM cuesta_tanto.ingredientes i
-         JOIN cuesta_tanto.materia_prima mp ON i.materia_prima_id = mp.id
+         FROM ingredientes i
+         JOIN materia_prima mp ON i.materia_prima_id = mp.id
          WHERE i.receta_id=$1 AND i.user_id=$2`,
         [receta_id, user_id]
       );
@@ -94,7 +94,7 @@ export class Ingredientes {
       const precio_total = parseFloat(precioRows[0]?.precio_total || 0).toFixed(2);
 
       await client.query(
-        `UPDATE cuesta_tanto.recetas SET precio_total=$1 WHERE id=$2 AND user_id=$3`,
+        `UPDATE recetas SET precio_total=$1 WHERE id=$2 AND user_id=$3`,
         [precio_total, receta_id, user_id]
       );
 
@@ -139,7 +139,7 @@ async bulkCreateIngrediente(user_id, receta_id, ingredientes) {
     // Traer existentes en esa receta
     const { rows: existentes } = await client.query(
       `SELECT id, materia_prima_id, cantidad_usada 
-       FROM cuesta_tanto.ingredientes 
+       FROM ingredientes 
        WHERE receta_id=$1 AND user_id=$2`,
       [receta_id, user_id]
     );
@@ -161,14 +161,14 @@ async bulkCreateIngrediente(user_id, receta_id, ingredientes) {
 
       // Siempre descontamos lo nuevo
       await client.query(
-        `UPDATE cuesta_tanto.materia_prima SET stock=stock-$1 WHERE id=$2`,
+        `UPDATE materia_prima SET stock=stock-$1 WHERE id=$2`,
         [ing.cantidad_usada, ing.materia_prima_id]
       );
 
       if (existe) {
         // SUMAR la nueva cantidad a la existente
         const { rows } = await client.query(
-          `UPDATE cuesta_tanto.ingredientes 
+          `UPDATE ingredientes 
            SET cantidad_usada = cantidad_usada + $1 
            WHERE id=$2 RETURNING *`,
           [ing.cantidad_usada, existe.id]
@@ -191,7 +191,7 @@ async bulkCreateIngrediente(user_id, receta_id, ingredientes) {
       });
 
       const { rows } = await client.query(
-        `INSERT INTO cuesta_tanto.ingredientes (user_id, receta_id, materia_prima_id, cantidad_usada, unidad)
+        `INSERT INTO ingredientes (user_id, receta_id, materia_prima_id, cantidad_usada, unidad)
          VALUES ${placeholders.join(", ")} RETURNING *`,
         values
       );
@@ -201,15 +201,15 @@ async bulkCreateIngrediente(user_id, receta_id, ingredientes) {
     // Actualizar precio_total
     const { rows: precioRows } = await client.query(
       `SELECT SUM(i.cantidad_usada * mp.precio_unitario) AS precio_total
-       FROM cuesta_tanto.ingredientes i
-       JOIN cuesta_tanto.materia_prima mp ON i.materia_prima_id = mp.id
+       FROM ingredientes i
+       JOIN materia_prima mp ON i.materia_prima_id = mp.id
        WHERE i.receta_id=$1 AND i.user_id=$2`,
       [receta_id, user_id]
     );
 
     const precio_total = parseFloat(precioRows[0]?.precio_total || 0).toFixed(2);
     await client.query(
-      `UPDATE cuesta_tanto.recetas SET precio_total=$1 WHERE id=$2 AND user_id=$3`,
+      `UPDATE recetas SET precio_total=$1 WHERE id=$2 AND user_id=$3`,
       [precio_total, receta_id, user_id]
     );
 
@@ -226,7 +226,7 @@ async bulkCreateIngrediente(user_id, receta_id, ingredientes) {
 
 
   async getIngrediente(user_id, receta_id) {
-    const query = `SELECT * FROM cuesta_tanto.ingredientes WHERE user_id=$1 AND receta_id=$2 ORDER BY id`;
+    const query = `SELECT * FROM ingredientes WHERE user_id=$1 AND receta_id=$2 ORDER BY id`;
     const values = [user_id, receta_id];
     const result = await dataBase.query(query, values);
     return result.rows;
@@ -234,7 +234,7 @@ async bulkCreateIngrediente(user_id, receta_id, ingredientes) {
 
   async modifyIngrediente(id, receta_id, materia_prima_id, cantidad_usada, unidad, user_id) {
     const query = `
-      UPDATE cuesta_tanto.ingredientes
+      UPDATE ingredientes
       SET receta_id = $1,
           materia_prima_id = $2,
           cantidad_usada = $3,
@@ -248,7 +248,7 @@ async bulkCreateIngrediente(user_id, receta_id, ingredientes) {
   }
 
   async deleteIngrediente(id, user_id) {
-    const query = `DELETE FROM cuesta_tanto.ingredientes WHERE id = $1 AND user_id = $2 RETURNING *`;
+    const query = `DELETE FROM ingredientes WHERE id = $1 AND user_id = $2 RETURNING *`;
     const values = [id, user_id];
     const result = await dataBase.query(query, values);
     return result.rows[0];

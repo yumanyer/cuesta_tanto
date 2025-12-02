@@ -12,7 +12,7 @@ export const checkOwnershipReceta = async (req, res, next) => {
     }
 
     const query = `
-      SELECT 1 FROM cuesta_tanto.recetas
+      SELECT 1 FROM recetas
       WHERE id = $1 AND user_id = $2
     `;
     const values = [receta_id, user_id];

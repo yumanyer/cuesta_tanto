@@ -6,7 +6,7 @@ export const checkOwnership = async (req, res, next) => {
     const user_id = req.user.id;
 
     const query = `
-      SELECT 1 FROM cuesta_tanto.materia_prima 
+      SELECT 1 FROM materia_prima 
       WHERE id = $1 AND user_id = $2
     `;
     const values = [id, user_id];

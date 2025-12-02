@@ -15,7 +15,7 @@ export class MatterRaw{
 async existeProductoForUser(nombre_producto, unidad, user_id, ignore_id = null) {
     try {
         let query = `
-            SELECT * FROM cuesta_tanto.materia_prima 
+            SELECT * FROM materia_prima 
             WHERE nombre_producto = $1 AND unidad = $2 AND user_id = $3
         `;
         const values = [nombre_producto, unidad, user_id];
@@ -42,7 +42,7 @@ async getAllProductsForUser(user_id, limit = 5, offset = 0) {
     if (limit > 0) {
       query = `
         SELECT * 
-        FROM cuesta_tanto.materia_prima 
+        FROM materia_prima 
         WHERE user_id = $1
         ORDER BY id ASC
         LIMIT $2 OFFSET $3
@@ -51,7 +51,7 @@ async getAllProductsForUser(user_id, limit = 5, offset = 0) {
     } else {
       query = `
         SELECT * 
-        FROM cuesta_tanto.materia_prima 
+        FROM materia_prima 
         WHERE user_id = $1
         ORDER BY id ASC
       `;
@@ -71,7 +71,7 @@ async getAllProductsForUser(user_id, limit = 5, offset = 0) {
 //crear nuevo producto en la db
 async createProduct(nombre_producto,stock,unidad,precio,user_id,precio_unitario){
         try {
-        const query='INSERT INTO cuesta_tanto.materia_prima(nombre_producto,stock,unidad,precio,user_id,precio_unitario) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *'
+        const query='INSERT INTO materia_prima(nombre_producto,stock,unidad,precio,user_id,precio_unitario) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *'
         const values=[nombre_producto,stock,unidad,precio,user_id,precio_unitario]
         console.time("createProduct")
         const result=await dataBase.query(query,values)
@@ -86,7 +86,7 @@ async createProduct(nombre_producto,stock,unidad,precio,user_id,precio_unitario)
 async modifyProduct(nombre_producto, stock, unidad, precio, id, user_id, precio_unitario) {
     try {
         const query = `
-            UPDATE cuesta_tanto.materia_prima
+            UPDATE materia_prima
             SET nombre_producto = $3,
                 stock = $4,
                 unidad = $5,
@@ -108,7 +108,7 @@ async modifyProduct(nombre_producto, stock, unidad, precio, id, user_id, precio_
 
     async deleteProduct(id,user_id){
         try {
-            const query = 'DELETE from  cuesta_tanto.materia_prima where id = $1 and user_id = $2 RETURNING * '
+            const query = 'DELETE from  materia_prima where id = $1 and user_id = $2 RETURNING * '
             const values = [id,user_id]
             console.time("deleteProduct")
             const result = await dataBase.query(query,values)
