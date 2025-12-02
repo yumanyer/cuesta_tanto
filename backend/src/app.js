@@ -88,7 +88,9 @@ async function InitApp(){
          // UNA VEZ CONECTADA LA DB INICIO LA APP
          //2-3 ms
          console.time("Inicio de la aplicación")
-        app.listen(config.port, ()=>{})
+        app.listen(PORT, () => {
+          console.log("Servidor escuchando en el puerto:", PORT)
+        })
         console.timeEnd("Inicio de la aplicación")
     } catch (error) {
         console.error('No se pudo conectar a la base de datos:', error);
