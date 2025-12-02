@@ -7,6 +7,9 @@ export const dataBase = new Pool({
     user:config.db.user,
     password:config.db.password,
     database:config.db.database,
-    port:config.db.port
+    port:config.db.port,
+    ssl: {
+        rejectUnauthorized: false 
+    }
 })
 
