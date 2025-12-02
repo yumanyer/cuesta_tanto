@@ -25,7 +25,7 @@ import { logRequest } from "./middleware/app/logs.middleware.js"
 import { requireAuth } from "./middleware/auth/requireAuth.middleware.js"
 // CONFIG SERVER
 const app = express()
-const PORT = process.env.PORT || config.port 
+const PORT = process.env.PORT || config.port || 3000
 const privatePath = path.join(getDirname(), '../frontend/private')
 const publicPath = path.join(getDirname(), '../frontend/public')
 app.use(express.static(path.join(getDirname(), 'public')));
