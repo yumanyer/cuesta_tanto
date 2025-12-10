@@ -1,4 +1,6 @@
 // frontend/public/scripts/shared.js
+import {sdk} from "https://esm.sh/@farcaster/miniapp-sdk";
+
 
 // Función para validar email
 export function isValidEmail(email) {
@@ -86,3 +88,80 @@ export function validatePasswordMatch(password, confirmPassword) {
 }
 
 
+export const handleFarcasterAuth = async ({
+  errorMessage,
+  successMessage,
+  signUpForm,
+  container,
+  leftDoor,
+  rightDoor,
+  audio,
+  loader,
+  welcomeMessage,
+  contentBehind,
+  isSignUp = false // true para sign-up, false para login
+}) => {
+  try {
+    errorMessage.textContent = '';
+    if (successMessage) successMessage.textContent = 'Autenticando con Farcaster...';
+    
+    // Hacer request autenticado con Farcaster
+    const response = await sdk.quickAuth.fetch('https://cuesta-tanto.onrender.com/auth/farcaster', {
+      method: 'POST'
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Autenticación con Farcaster exitosa:', data);
+      
+      if (successMessage) {
+        successMessage.textContent = isSignUp 
+          ? '¡Cuenta creada con Farcaster!' 
+          : '¡Inicio de sesión exitoso!';
+      }
+      
+      // Animaciones
+      signUpForm.classList.add('slide-out-top');
+      
+      const doorDelay = isSignUp ? 900 : 400;
+      const loaderDelay = isSignUp ? 1000 : 1200;
+      const finalDelay = isSignUp ? 7700 : 3200;
+      
+      setTimeout(() => {
+        openDoors(container, leftDoor, rightDoor);
+        playAudio(audio);
+      }, doorDelay);
+      
+      setTimeout(() => {
+        showLoader(loader, welcomeMessage, contentBehind, data.user.nombre);
+      }, loaderDelay);
+      
+      setTimeout(() => {
+        loader.style.display = 'none';
+        
+        if (isSignUp) {
+          welcomeMessage.innerHTML = `
+            <div style="color: white; text-align: center;">
+              <h2 style="color: #28a745; margin-bottom: 1rem;">¡Bienvenido ${data.user.nombre}! ✅</h2>
+              <p style="font-size: 1rem; opacity: 0.8;">Redirigiendo al panel principal...</p>
+            </div>`;
+          setTimeout(() => window.location.href = '/matterRaw', 2000);
+        } else {
+          window.location.href = '/matterRaw';
+        }
+      }, finalDelay);
+      
+    } else {
+      const error = await response.json();
+      errorMessage.textContent = error.message || 'Error al autenticar con Farcaster';
+      errorMessage.style.color = 'red';
+      signUpForm.classList.remove('slide-out-top');
+    }
+    
+  } catch (error) {
+    console.error('❌ Error de Farcaster:', error);
+    errorMessage.textContent = 'Error de conexión. Asegúrate de usar la app desde Farcaster Mini App.';
+    errorMessage.style.color = 'red';
+    signUpForm.classList.remove('slide-out-top');
+  }
+};

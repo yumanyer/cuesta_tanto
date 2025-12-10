@@ -167,3 +167,30 @@ window.mostrarContraseña = function(event) {
   // Botón "Ya tengo cuenta"
   document.querySelector('.button2').addEventListener('click', () => window.location.href = 'login.html');
 });
+//==========================================
+// 🔵 INICIALIZAR SDK DE FARCASTER
+// ==========================================
+const initFarcasterSDK = async () => {
+  try {
+    const { sdk } = await import("https://esm.sh/@farcaster/miniapp-sdk");
+    
+    // Esperar a que el DOM esté completamente cargado
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          sdk.actions.ready();
+          console.log('✅ sdk.actions.ready() llamado desde sign-up');
+        }, 100);
+      });
+    } else {
+      setTimeout(() => {
+        sdk.actions.ready();
+        console.log('✅ sdk.actions.ready() llamado desde sign-up');
+      }, 100);
+    }
+  } catch (error) {
+    console.log('ℹ️ SDK de Farcaster no disponible (probablemente en navegador normal)');
+  }
+};
+
+initFarcasterSDK();

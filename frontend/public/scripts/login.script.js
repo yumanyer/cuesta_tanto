@@ -104,3 +104,31 @@ window.mostrarContraseña = function(event) {
     alert('Funcionalidad de recuperación de contraseña no implementada.');
   });
 });
+
+//==========================================
+// 🔵 INICIALIZAR SDK DE FARCASTER
+// ==========================================
+const initFarcasterSDK = async () => {
+  try {
+    const { sdk } = await import("https://esm.sh/@farcaster/miniapp-sdk");
+    
+    // Esperar a que el DOM esté completamente cargado
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          sdk.actions.ready();
+          console.log('✅ sdk.actions.ready() llamado desde login');
+        }, 100);
+      });
+    } else {
+      setTimeout(() => {
+        sdk.actions.ready();
+        console.log('✅ sdk.actions.ready() llamado desde login');
+      }, 100);
+    }
+  } catch (error) {
+    console.log('ℹ️ SDK de Farcaster no disponible (probablemente en navegador normal)');
+  }
+};
+
+initFarcasterSDK();
