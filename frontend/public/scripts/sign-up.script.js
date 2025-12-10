@@ -9,7 +9,8 @@ import {
   showLoader,
   evaluatePasswordStrength,
   updatePasswordStrengthUI,
-  validatePasswordMatch
+  validatePasswordMatch,
+  handleFarcasterAuth  // ← AGREGAR ESTO
 } from "./services/shared.js";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -36,8 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const strengthText = document.getElementById('strengthText');
   const passwordStrength = document.getElementById('passwordStrength'); 
   
-window.mostrarContraseña = function(event) {
-    // Buscar el input dentro del mismo contenedor .field
+  window.mostrarContraseña = function(event) {
     const fieldContainer = event.currentTarget.closest('.field');
     const passwordInput = fieldContainer.querySelector('.input-field.eye');
     const eyePath = event.currentTarget.querySelector('path');
@@ -48,18 +48,13 @@ window.mostrarContraseña = function(event) {
     }
     
     if (passwordInput.type === 'password') {
-        // Mostrar contraseña
         passwordInput.type = 'text';
         eyePath.setAttribute('d', 'M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z');
     } else {
-        // Ocultar contraseña
         passwordInput.type = 'password';
         eyePath.setAttribute('d', 'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z');
     }
-};
-
-
-
+  };
 
   // Eventos inputs
   usernameInput.addEventListener('input', () => {
@@ -93,7 +88,7 @@ window.mostrarContraseña = function(event) {
     return false;
   }
 
-  // Submit
+  // Submit tradicional
   signUpForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorMessage.textContent = '';
@@ -113,21 +108,18 @@ window.mostrarContraseña = function(event) {
     if (!validatePasswordMatch(password, confirmPassword)) errors.push('Las contraseñas no coinciden');
     if (!termsAccepted) errors.push('Debes aceptar los términos y condiciones');
 
-    //impide que se ejecute la lógica de envío si hay algún error.
     if (errors.length > 0) {
       errorMessage.textContent = errors[0];
       return;
     }
     playAudio(audio);
-    // Enviar datos al backend
+    
     const dataRegister = { Name: username, Email:email, Password: password };
     try {
       const res = await fetchWithAuth("/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataRegister)
-
-
       });
       const result = await res.json();
 
@@ -135,11 +127,8 @@ window.mostrarContraseña = function(event) {
         successMessage.textContent = '¡Validación exitosa! Creando tu cuenta...';
         signUpForm.classList.add('slide-out-top');
 
-        // ANIMA LAS PUERTAS Y EJECUTA EL AUDIO
         setTimeout(() => {openDoors(container, leftDoor, rightDoor);}, 900);
-        // EJECTUA EL LOADER
         setTimeout(() => showLoader(loader, welcomeMessage, contentBehind, username), 1000);
-        // MENSAJE EN EL LOADER Y REDIRECCIÓN
         setTimeout(() => {
           loader.style.display = 'none';
           welcomeMessage.innerHTML = `
@@ -161,36 +150,34 @@ window.mostrarContraseña = function(event) {
     } catch (error) {
       errorMessage.textContent= "Hubo un error al intentar inciar sesion . Por favor intenta nuevamente o contacta con nosotros";
       errorMessage.style.color = 'red';
-      loader.style.display = "none";    }
+      loader.style.display = "none";
+    }
   });
+
+  // ==========================================
+  // 🔵 NUEVO: BOTÓN DE FARCASTER
+  // ==========================================
+  const farcasterSignUpBtn = document.getElementById('farcasterSignUp');
+
+  if (farcasterSignUpBtn) {
+    farcasterSignUpBtn.addEventListener('click', () => {
+      console.log('🔵 Click en Sign Up con Farcaster');
+      handleFarcasterAuth({
+        errorMessage,
+        successMessage,
+        signUpForm,
+        container,
+        leftDoor,
+        rightDoor,
+        audio,
+        loader,
+        welcomeMessage,
+        contentBehind,
+        isSignUp: true
+      });
+    });
+  }
 
   // Botón "Ya tengo cuenta"
   document.querySelector('.button2').addEventListener('click', () => window.location.href = 'login.html');
 });
-//==========================================
-// 🔵 INICIALIZAR SDK DE FARCASTER
-// ==========================================
-const initFarcasterSDK = async () => {
-  try {
-    const { sdk } = await import("https://esm.sh/@farcaster/miniapp-sdk");
-    
-    // Esperar a que el DOM esté completamente cargado
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          sdk.actions.ready();
-          console.log('✅ sdk.actions.ready() llamado desde sign-up');
-        }, 100);
-      });
-    } else {
-      setTimeout(() => {
-        sdk.actions.ready();
-        console.log('✅ sdk.actions.ready() llamado desde sign-up');
-      }, 100);
-    }
-  } catch (error) {
-    console.log('ℹ️ SDK de Farcaster no disponible (probablemente en navegador normal)');
-  }
-};
-
-initFarcasterSDK();

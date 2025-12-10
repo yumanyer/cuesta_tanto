@@ -7,6 +7,17 @@
 
   <title>Login Door Animation</title>
 <link rel="stylesheet" href="../css/style.css">
+  <script type="module">
+    (async () => {
+      try {
+        const { sdk } = await import("https://esm.sh/@farcaster/miniapp-sdk");
+        sdk.actions.ready();
+        console.log('✅ ready() llamado en login');
+      } catch (e) {
+        console.log('ℹ️ No en Farcaster');
+      }
+    })();
+  </script>
 </head>
 <body class="box">
 
