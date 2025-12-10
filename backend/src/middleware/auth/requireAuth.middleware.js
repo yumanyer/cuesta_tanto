@@ -25,14 +25,14 @@ export const requireAuth = (allowRoles = []) => async (req, res, next) => {
       
       // Buscar usuario por FID
       let userResult = await dataBase.query(
-        'SELECT * FROM cuesta_tanto.usuarios WHERE fid = $1',
+        'SELECT * FROM usuarios WHERE fid = $1',
         [fid]
       );
       
       // Si no existe, crear usuario automáticamente
       if (!userResult.rows.length) {
         userResult = await dataBase.query(
-          `INSERT INTO cuesta_tanto.usuarios (fid, "Name", "Rol") 
+          `INSERT INTO usuarios (fid, "Name", "Rol") 
            VALUES ($1, $2, $3) 
            RETURNING *`,
           [fid, `Usuario Farcaster ${fid}`, 'Pastelero']
@@ -98,7 +98,7 @@ export const requireAuth = (allowRoles = []) => async (req, res, next) => {
     }
 
     const result = await dataBase.query(
-      'SELECT id FROM cuesta_tanto.usuarios WHERE refresh_token = $1',
+      'SELECT id FROM usuarios WHERE refresh_token = $1',
       [refreshToken]
     );
     
