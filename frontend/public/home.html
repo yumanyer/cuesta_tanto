@@ -144,6 +144,21 @@ El proyecto nace de esa necesidad cotidiana, de simplificar lo que antes era un 
 
     initEvents();
   </script>
-
+  <!-- Script de Farcaster SDK (Movido al final) -->
+  <script type="module">
+    (async () => {
+      try {
+        // Importamos el SDK
+        const { sdk } = await import("https://esm.sh/@farcaster/miniapp-sdk");
+        
+        // Llamamos a ready()
+        sdk.actions.ready();
+        
+        console.log('✅ ready() llamado en Portal de Acceso');
+      } catch (e) {
+        console.error('Error al cargar Farcaster SDK:', e);
+      }
+    })();
+  </script>
 </body>
 </html>
