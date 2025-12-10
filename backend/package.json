@@ -5,12 +5,13 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-  "app": "cross-env NODE_ENV=production node src/app.js",
+    "app": "cross-env NODE_ENV=production node src/app.js",
     "dev": "nodemon"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@farcaster/quick-auth": "^0.0.8",
     "bcrypt": "6.0.0",
     "cookie-parser": "1.4.7",
     "express": "5.1.0",
