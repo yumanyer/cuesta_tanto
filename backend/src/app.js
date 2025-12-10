@@ -69,11 +69,12 @@ async function InitApp(){
         // Servir manifest de Farcaster
         app.get('/.well-known/farcaster.json', (req, res) => {
           res.json({
-            "accountAssociation": {
-              "header": "eyJmaWQiOjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIn0",
-              "payload": "eyJkb21haW4iOiJjdWVzdGEtdGFudG8ub25yZW5kZXIuY29tIn0",
-              "signature": "MHg..."
-            },
+              "accountAssociation": {
+                "header": "eyJmaWQiOjE1Njk0MTgsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg4RmRhODVCMDdlZWZEMjRFZmE1QmRkM2FkQTUzMzM5YmQwMzkxOTFFIn0",
+                "payload": "eyJkb21haW4iOiJjdWVzdGEtdGFudG8ub25yZW5kZXIuY29tIn0",
+                "signature": "eb4zzlvWdcoyGtT7FM9mlf1yvQG3CuUzYoTIDxIxC30+5id86+J2SnDZFM8Tohu5assfKMytuZy7O2ey3GC8Lxs="
+              }
+            ,
             "frame": {
               "version": "1",
               "name": "Cuanto Cuesta",
