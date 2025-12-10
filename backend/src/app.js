@@ -66,6 +66,27 @@ async function InitApp(){
         app.use("/api/matterRaw",matterRouter)
         app.use("/api/recetas", RecetasRouter)
         app.use("/api/ingrediente", IngredienteRouter)
+        // Servir manifest de Farcaster
+        app.get('/.well-known/farcaster.json', (req, res) => {
+          res.json({
+            "accountAssociation": {
+              "header": "eyJmaWQiOjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIn0",
+              "payload": "eyJkb21haW4iOiJjdWVzdGEtdGFudG8ub25yZW5kZXIuY29tIn0",
+              "signature": "MHg..."
+            },
+            "frame": {
+              "version": "1",
+              "name": "Cuanto Cuesta",
+              "iconUrl": "https://cuesta-tanto.onrender.com/icon.png",
+              "homeUrl": "https://cuesta-tanto.onrender.com",
+              "imageUrl": "https://cuesta-tanto.onrender.com/splash.png",
+              "buttonTitle": "Calcular Costos",
+              "splashImageUrl": "https://cuesta-tanto.onrender.com/splash.png",
+              "splashBackgroundColor": "#1a1a1a",
+              "webhookUrl": "https://cuesta-tanto.onrender.com/api/farcaster/webhook"
+            }
+          });
+        });
 
         //protego la ruta de cargar materia separando logica de interfaz
         app.get("/matterRaw", requireAuth(["Pastelero","Admin"]), (req,res)=>{

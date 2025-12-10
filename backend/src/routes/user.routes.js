@@ -46,4 +46,6 @@ router.get("/me", requireAuth(["Pastelero", "Admin"]), (req, res) => {
     authMethod: req.user.authMethod
   });
 });
+
+
 export default router  
