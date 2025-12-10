@@ -106,7 +106,7 @@ export const handleFarcasterAuth = async ({
     if (successMessage) successMessage.textContent = 'Autenticando con Farcaster...';
     
     // Hacer request autenticado con Farcaster
-    const response = await sdk.quickAuth.fetch('https://cuesta-tanto.onrender.com/auth/farcaster', {
+    const response = await sdk.quickAuth.fetch('https://cuesta-tanto.onrender.com/api/users/farcaster', {
       method: 'POST'
     });
     
