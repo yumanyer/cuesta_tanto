@@ -11,7 +11,7 @@
       try {
         const { sdk } = await import("https://esm.sh/@farcaster/miniapp-sdk");
         sdk.actions.ready();
-        console.log('✅ ready() llamado en login');
+        console.log('✅ ready() llamado en sign-up');
       } catch (e) {
         console.log('ℹ️ No en Farcaster');
       }
@@ -100,18 +100,18 @@
         </div>
 
         <!-- Términos y condiciones -->
-        <div class="checkbox-field">
+        <!-- <div class="checkbox-field">
           <input type="checkbox" id="termsCheckbox" class="checkbox">
           <label for="termsCheckbox" class="checkbox-label">
             Acepto los <a href="#" class="terms-link">términos y condiciones</a>
           </label>
-        </div>
+        </div> -->
 
         <div class="divider">
           <span>o continuar con</span>
         </div>
 
-        <button class="button farcaster-btn" type="button" id="farcasterLogin">
+        <button class="button farcaster-btn" type="button" id="farcasterSignUp">
           <svg width="20" height="20" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M257.778 155.556H742.222V844.444H671.111V528.889H670.414C662.554 441.677 589.258 373.333 500 373.333C410.742 373.333 337.446 441.677 329.586 528.889H328.889V844.444H257.778V155.556Z" fill="currentColor"/>
             <path d="M128.889 253.333L157.778 351.111H182.222V746.667C182.222 796.103 221.731 835.556 271.111 835.556H318.889V746.667H271.111V253.333H128.889Z" fill="currentColor"/>

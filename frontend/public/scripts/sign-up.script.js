@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
   const confirmPasswordInput = document.getElementById('confirmPassword');
-  const termsCheckbox = document.getElementById('termsCheckbox');
   const errorMessage = document.getElementById('errorMessage');
   const successMessage = document.getElementById('successMessage');
   const contentBehind = document.getElementById('contentBehind');
@@ -98,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const email = emailInput.value.trim();
     const password = passwordInput.value;
     const confirmPassword = confirmPasswordInput.value;
-    const termsAccepted = termsCheckbox.checked;
 
     const errors = [];
     
@@ -106,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!email || !isValidEmail(email)) errors.push('Ingresa un email válido');
     if (evaluatePasswordStrength(password).score < 3) errors.push('La contraseña debe ser más segura');
     if (!validatePasswordMatch(password, confirmPassword)) errors.push('Las contraseñas no coinciden');
-    if (!termsAccepted) errors.push('Debes aceptar los términos y condiciones');
 
     if (errors.length > 0) {
       errorMessage.textContent = errors[0];
